@@ -39,6 +39,35 @@ def make_whole_dataset():
     return whole_audio_file_list, whole_label_list
 
 
+class AudioDataset(Dataset):
+    def __init__(self, audio_filepaths, labels):
+        self.audio_filepaths = audio_filepaths
+        self.labels = labels
+
+    def __len__(self):
+        return len(self.labels)
+
+    def __getitem__(self, idx):
+        waveform = load_audio(self.audio_filepaths[idx])
+        label = torch.tensor(self.labels[idx], dtype=torch.float32)
+        return {
+            "input_values": waveform,
+            "labels": label,
+        }
+
+
+def collate_fn(batch):
+    input_values = [item["input_values"] for item in batch]
+    labels = [item["labels"] for item in batch]
+
+    input_values = [x.squeeze().numpy() for x in input_values]
+
+    inputs = pretrained_processor(input_values, sampling_rate=16000, return_tensors="pt", padding=True, truncation=True, max_length=160000)
+    labels = torch.stack(labels)
+
+    return inputs, labels
+
+
 num_epochs = 20
 weights_file = f"audio_weights_epoch{num_epochs}_emotions_mlc_wav2vec2.pth"
 checkpoint = torch.load(weights_file)
