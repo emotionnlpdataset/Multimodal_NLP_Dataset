@@ -25,12 +25,6 @@ def get_video_number(file_path):
     return video_number
 
 
-def normalize_label(label):
-    new_label = new_label / 100.0
-    # new_label[number] = (new_label[number] + 3) / 6
-    return new_label
-
-
 def get_corresponding_data(video_number):
     hdf5_folder = r"C:/Users/User/OneDrive/Documents/ResearchProjectHDF5Files/"
     hdf5_filename = "output_Video" + str(video_number) + ".h5"
@@ -120,11 +114,15 @@ model = VivitModel.from_pretrained("google/vivit-b-16x2-kinetics400", config=con
 for param in model.parameters():
     param.requires_grad = False
 
-# criterion = nn.SmoothL1Loss()
+# If emotions then True, else emotional dimensions/attributes
+emotions_category = True
 criterion = nn.BCEWithLogitsLoss()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
-head = torch.nn.Linear(768, 7)
+if emotions_category is True:
+    head = torch.nn.Linear(768, 7)
+else:
+    head = torch.nn.Linear(768, 3)
 head = head.to(device)
 optimizer = torch.optim.Adam(
     list(model.parameters()) + list(head.parameters()),
