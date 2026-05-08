@@ -10,7 +10,7 @@ import sys
 from Find_Timestamps_Scene_Changes import *
 
 
-def frame_extraction_sample_clips(video_clip, num_samples):
+def frame_extraction_clips(video_clip, num_samples):
     # Generate 16 evenly spaced timestamps
     timestamps = np.linspace(0, video_clip.duration, num_samples)
 
@@ -25,7 +25,7 @@ def frame_extraction_sample_clips(video_clip, num_samples):
     return frame_extracted_clip
 
 
-def video_preprocess(video_file, output_folder, trim, perform_frame_extraction):
+def video_preprocess(video_file, output_folder):
     path1 = Path(video_file)
     video_name = path1.name
     video_base_name = video_name.split(".")[0]
@@ -40,23 +40,14 @@ def video_preprocess(video_file, output_folder, trim, perform_frame_extraction):
         diff = height - width
         left = int(round(diff/2)); right = int(round(diff/2)); top = 0; bottom = 0; color = (0, 0, 0)
 
-    if perform_frame_extraction is True:
-        video_clip = frame_extraction_sample_clips(video_clip, num_samples=16)
-        print("Frame Extraction Completed")
+    video_clip = frame_extraction_clips(video_clip, num_samples=16)
+    print("Frame Extraction Completed")
 
     padded_clip = video_clip.margin(top, bottom, left, right, color)
     print("Padded Clip Completed")
-
-    if trim is True:
-        start_time, end_time = find_timestamps_longest_scene(video_file)
-        trimmed_clip = padded_clip.subclip(start_time, end_time)
-        print("Trimmed Clip Completed")
-
-        resized_clip = trimmed_clip.resize(newsize=(224, 224))
-        print("Resized Clip Completed")
-    else:
-        resized_clip = padded_clip.resize(newsize=(224, 224))
-        print("Resized Clip Completed")
+    
+    resized_clip = padded_clip.resize(newsize=(224, 224))
+    print("Resized Clip Completed")
 
     def video_to_hdf5(clip, hdf5_path):
         frames = []
@@ -80,25 +71,14 @@ def video_preprocess(video_file, output_folder, trim, perform_frame_extraction):
     video_clip.close(); padded_clip.close(); resized_clip.close()
 
 
-trim = False
-perform_frame_extraction = True
 folder1 = "C:/Users/User/OneDrive/Documents/Research Project Data - Copy/"
-if trim is True:
-    output_folder = "C:/Users/User/OneDrive/Documents/Output_Preprocessed_Trimmed_Video_Clips/"
-elif trim is False and perform_frame_extraction is False:
-    output_folder = "C:/Users/User/OneDrive/Documents/Output_Preprocessed_Video_Clips/"
-elif trim is False and perform_frame_extraction is True:
-    output_folder = "C:/Users/User/OneDrive/Documents/Output_Preprocessed_Video_Clips_Frame_Extraction/"
+output_folder = "C:/Users/User/OneDrive/Documents/ResearchProjectHDF5Files/"
 i = 0
 for file in os.listdir(folder1):
     print(f"{i+1}) {file}")
     temp_video_file = os.path.join(folder1, file)
-    video_preprocess(temp_video_file, output_folder, trim, perform_frame_extraction)
+    video_preprocess(temp_video_file, output_folder)
     i += 1
-
-
-
-
 
 
 
