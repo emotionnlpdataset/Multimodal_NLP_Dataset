@@ -25,11 +25,6 @@ def get_video_number(file_path):
     return video_number
 
 
-def normalize_label(label, emotions=True):
-    new_label = label / 100.0
-    return new_label
-
-
 def get_corresponding_data(video_number):
     # index = video_number - 1
     audio_embedding = audio_embeddings[video_number-1]
@@ -42,7 +37,6 @@ def get_corresponding_data(video_number):
     cond_label = condition_label['Neurodivergent'].loc[video_number-1]
     # Yes (1): Autism/Neurodivergent, No (0): Normal/Neurotypical
 
-    # new_label = normalize_label(new_label, emotions=emotions)
     return audio_embedding, text_embedding, video_embedding, new_label, cond_label
 
 
