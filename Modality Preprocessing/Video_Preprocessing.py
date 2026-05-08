@@ -72,7 +72,7 @@ def video_preprocess(video_file, output_folder):
 
 
 folder1 = "C:/Users/User/OneDrive/Documents/Research Project Data - Copy/"
-output_folder = "C:/Users/User/OneDrive/Documents/ResearchProjectHDF5Files/"
+output_folder = "C:/Users/User/OneDrive/Documents/Output_Preprocessed_Video_Clips/"
 i = 0
 for file in os.listdir(folder1):
     print(f"{i+1}) {file}")
