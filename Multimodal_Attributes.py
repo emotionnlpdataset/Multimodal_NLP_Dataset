@@ -107,7 +107,6 @@ class MultimodalModel(nn.Module):
         return x
 
 
-emotions = False
 audio_embeddings_file = "C:/Users/User/PycharmProjects/Research Project/audio_embeddings_pretrained_attributes_mlc_wav2vec2.npy"
 text_embeddings_file = "C:/Users/User/PycharmProjects/Research Project/text_embeddings_pretrained_attributes_mlc.npy"
 video_embeddings_file = "C:/Users/User/PycharmProjects/Research Project/video_embeddings_pretrained_attributes_mlc.npy"
@@ -124,8 +123,6 @@ print(f"text_embeddings shape: {text_embeddings.shape}")
 print(f"video_embeddings shape: {video_embeddings.shape}")
 print(f"labels_data shape: {new_labels_data.shape}")
 
-
-# index = video_number - 1
 train_validation_split_file = "C:/Users/User/PycharmProjects/Research Project/Train_Validation_Split.csv"
 train_validation_split = np.loadtxt(train_validation_split_file, delimiter=',', dtype=str)
 train_validation_split = train_validation_split.tolist()
@@ -133,11 +130,9 @@ train_validation_split_audio_embeddings_list, train_validation_split_text_embedd
 train_validation_dataset = MultimodalDataset(train_validation_split_audio_embeddings_list, train_validation_split_text_embeddings_list, train_validation_split_video_embeddings_list, train_validation_split_label_list, train_validation_split_condition_list)
 
 model = MultimodalModel()
-# criterion = nn.MSELoss()
 criterion = nn.BCEWithLogitsLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
 num_epochs = 30
-# num_epochs = 100
 
 
 for epoch in range(num_epochs):
