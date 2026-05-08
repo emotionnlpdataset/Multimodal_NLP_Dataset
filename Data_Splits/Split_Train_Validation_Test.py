@@ -6,11 +6,7 @@ from natsort import natsorted
 import random
 import csv
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', None)
 random.seed(42)
-
 folder1 = "C:/Users/User/OneDrive/Documents/ResearchProjectHDF5Files/"
 files_list = os.listdir(folder1)
 
@@ -49,22 +45,15 @@ trainvalidation_and_test_split = 75
 normal_train_and_validation_split, normal_test_split = get_randomized_split_list(normal_files, trainvalidation_and_test_split)
 neurodivergent_train_and_validation_split, neurodivergent_test_split = get_randomized_split_list(neurodivergent_files, trainvalidation_and_test_split)
 
-# Train Split (60%): 444 Normal, 156 Neurodivergent; Validation Split (15%): 111 Normal, 39 Neurodivergent
-train_and_validation_split = 80
-normal_train_split, normal_validation_split = get_randomized_split_list(normal_train_and_validation_split, train_and_validation_split)
-neurodivergent_train_split, neurodivergent_validation_split = get_randomized_split_list(neurodivergent_train_and_validation_split, train_and_validation_split)
-
-# Combine Normal and Neurodivergent Splits and Shuffle
-train_split = normal_train_split + neurodivergent_train_split
-random.shuffle(train_split)
-validation_split = normal_validation_split + neurodivergent_validation_split
-random.shuffle(validation_split)
+# Combine Normal and Neurodivergent Splits and Shuffle for Train-Validation and Test Phases
+train_validation_split = normal_train_and_validation_split + neurodivergent_train_and_validation_split
+random.shuffle(train_validation_split)
 test_split = normal_test_split + neurodivergent_test_split
 random.shuffle(test_split)
 
 # Export to csv files
-splits = [train_split, validation_split, test_split]
-output_files = ["Train_Split.csv", "Validation_Split.csv", "Test_Split.csv"]
+splits = [train_validation_split, test_split]
+output_files = ["Train_Validation_Split.csv", "Test_Split.csv"]
 for i in range(len(splits)):
     temp_output_filename = output_files[i]
     temp_output_file_directory = os.path.join("C:/Users/User/Downloads", temp_output_filename)
