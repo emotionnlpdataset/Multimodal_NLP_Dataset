@@ -15,6 +15,24 @@ import librosa
 from itertools import chain
 
 
+def get_corresponding_data(video_number):
+    audio_folder = "C:/Users/User/OneDrive/Documents/Research Project Audio Files/"
+    audio_filename = "Video" + str(video_number) + ".mp3"
+    audio_file = os.path.join(audio_folder, audio_filename)
+
+    labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+    labels_data = np.load(labels_file)
+    label_clip = labels_data[video_number - 1]
+    label_clip = label_clip.astype(float)
+
+    condition_label_file = "C:/Users/User/PycharmProjects/Research Project/Condition_Labels.csv"
+    condition_label = pd.read_csv(condition_label_file)
+    cond_label = condition_label['Neurodivergent'].loc[video_number - 1]
+    # Yes (1): Autism/Neurodivergent, No (0): Normal/Neurotypical
+
+    return audio_file, label_clip, cond_label
+
+
 def make_whole_dataset():
     whole_audio_file_list = []
     whole_label_list = []
