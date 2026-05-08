@@ -25,12 +25,7 @@ def get_corresponding_data(video_number):
     label_clip = labels_data[video_number - 1]
     label_clip = label_clip.astype(float)
 
-    condition_label_file = "C:/Users/User/PycharmProjects/Research Project/Condition_Labels.csv"
-    condition_label = pd.read_csv(condition_label_file)
-    cond_label = condition_label['Neurodivergent'].loc[video_number - 1]
-    # Yes (1): Autism/Neurodivergent, No (0): Normal/Neurotypical
-
-    return audio_file, label_clip, cond_label
+    return audio_file, label_clip
 
 
 def make_whole_dataset():
@@ -38,11 +33,10 @@ def make_whole_dataset():
     whole_label_list = []
     whole_condition_list = []
     for i in range(1000):
-        audio_file, label_clip, cond_label = get_corresponding_data(i + 1)
+        audio_file, label_clip = get_corresponding_data(i + 1)
         whole_audio_file_list.append(audio_file)
         whole_label_list.append(label_clip)
-        whole_condition_list.append(cond_label)
-    return whole_audio_file_list, whole_label_list, whole_condition_list
+    return whole_audio_file_list, whole_label_list
 
 
 num_epochs = 20
@@ -51,21 +45,15 @@ checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
 classifier.load_state_dict(checkpoint['classifier_state_dict'])
 
-whole_audio_file_list, whole_label_list, whole_condition_list = make_whole_dataset()
-whole_dataset = AudioDataset(whole_audio_file_list, whole_label_list, whole_condition_list)
+whole_audio_file_list, whole_label_list = make_whole_dataset()
+whole_dataset = AudioDataset(whole_audio_file_list, whole_label_list)
 
 whole_loader = DataLoader(whole_dataset, batch_size=4, collate_fn=collate_fn)
 
 audio_embedding = []
-whole_pred_array = []
-whole_label_array = []
-neurotypical_pred_array = []
-neurotypical_label_array = []
-neurodivergent_pred_array = []
-neurodivergent_label_array = []
-total_loss = 0.0
 model.eval()
 model.to(device)
+
 # Testing
 with torch.no_grad():
     for audio_input, label, cond_label in Bar(whole_loader):
@@ -77,7 +65,7 @@ with torch.no_grad():
         audio_embedding.append(embeddings.squeeze().tolist())
 
 # Save Audio Embedding
-audio_embedding_file_npy = "C:/Users/User/PycharmProjects/Research Project/audio_embeddings_pretrained_attributes_mlc_wav2vec2.npy"
+audio_embedding_file_npy = "C:/Users/User/PycharmProjects/Research Project/audio_embeddings_pretrained_emotions_mlc_wav2vec2.npy"
 audio_embedding = list(chain.from_iterable(audio_embedding))
 audio_embedding = np.asarray(audio_embedding, dtype=np.float32)
 audio_embedding = np.squeeze(audio_embedding)
