@@ -66,35 +66,26 @@ neurodivergent_label_array = []
 total_loss = 0.0
 model.eval()
 model.to(device)
-classifier.to(device)
 # Testing
 with torch.no_grad():
     for audio_input, label, cond_label in Bar(whole_loader):
         inputs = {k: v.to(device) for k, v in audio_input.items()}
         label = label.to(device)
-
         output = model(**inputs)
         hidden_states = output.last_hidden_state
         embeddings = hidden_states.mean(dim=1)
-        logits = classifier(embeddings)
-        loss = criterion(logits, label)
-
-        prob = torch.sigmoid(logits)
-        pred = (prob > 0.35).float()
-
         audio_embedding.append(embeddings.squeeze().tolist())
-        whole_pred_array.append(pred.detach())
-        whole_label_array.append(label.detach())
-        
-        for i in range(cond_label.shape[0]):
-            if cond_label[i] == 1:
-                neurodivergent_pred_array.append(pred[i].detach())
-                neurodivergent_label_array.append(label[i].detach())
-            elif cond_label[i] == 0:
-                neurotypical_pred_array.append(pred[i].detach())
-                neurotypical_label_array.append(label[i].detach())
 
-        total_loss += loss.item()
+# Save Audio Embedding
+audio_embedding_file_npy = "C:/Users/User/PycharmProjects/Research Project/audio_embeddings_pretrained_attributes_mlc_wav2vec2.npy"
+audio_embedding = list(chain.from_iterable(audio_embedding))
+audio_embedding = np.asarray(audio_embedding, dtype=np.float32)
+audio_embedding = np.squeeze(audio_embedding)
+np.save(audio_embedding_file_npy, audio_embedding)
+print("Audio Embedding for Emotions Saved")
+
+
+
 
 
 
