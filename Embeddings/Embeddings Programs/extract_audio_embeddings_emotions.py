@@ -14,6 +14,19 @@ import h5py
 import librosa
 from itertools import chain
 
+
+def make_whole_dataset():
+    whole_audio_file_list = []
+    whole_label_list = []
+    whole_condition_list = []
+    for i in range(1000):
+        audio_file, label_clip, cond_label = get_corresponding_data(i + 1)
+        whole_audio_file_list.append(audio_file)
+        whole_label_list.append(label_clip)
+        whole_condition_list.append(cond_label)
+    return whole_audio_file_list, whole_label_list, whole_condition_list
+
+
 num_epochs = 20
 weights_file = f"audio_weights_epoch{num_epochs}_emotions_mlc_wav2vec2.pth"
 checkpoint = torch.load(weights_file)
