@@ -68,7 +68,10 @@ def collate_fn(batch):
     return inputs, labels
 
 
-num_epochs = 20
+pretrained_processor = Wav2Vec2FeatureExtractor.from_pretrained("facebook/wav2vec2-base-960h")
+model = Wav2Vec2Model.from_pretrained("superb/wav2vec2-base-superb-er")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+num_epochs = 10
 weights_file = f"audio_weights_epoch{num_epochs}_emotions_mlc_wav2vec2.pth"
 checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
