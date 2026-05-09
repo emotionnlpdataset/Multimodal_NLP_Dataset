@@ -10,9 +10,6 @@ import sys
 import csv
 from natsort import natsorted
 from transformers import Wav2Vec2Model, Wav2Vec2Processor, Wav2Vec2ForSequenceClassification, Wav2Vec2FeatureExtractor
-import h5py
-import librosa
-from itertools import chain
 
 
 def get_corresponding_data(video_number):
