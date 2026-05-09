@@ -23,7 +23,7 @@ def get_video_number(file_path):
     return video_number
 
 
-def get_corresponding_data(video_number):
+def get_corresponding_data(video_number, emotions_task):
     hdf5_folder = "C:/Users/User/OneDrive/Documents/ResearchProjectHDF5Files/"
     hdf5_filename = "output_Video" + str(video_number) + ".h5"
     hdf5_file = os.path.join(hdf5_folder, hdf5_filename)
@@ -32,7 +32,10 @@ def get_corresponding_data(video_number):
         label_data = f['label']
         video_data = video_data[:]
 
-    labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+    if emotions_task is True:
+        labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+    else: 
+        labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_By_Classification_Attributes.npy"
     labels_data = np.load(labels_file)
     label_clip = labels_data[video_number - 1]
     label_clip = label_clip.astype(float)
@@ -45,13 +48,13 @@ def get_corresponding_data(video_number):
     return video_data, label_clip, cond_label
 
 
-def get_split_data(phase_split, phase_file_list):
+def get_split_data(phase_split, phase_file_list, emotions_task):
     phase_split_vid_data_list = []
     phase_split_label_list = []
     phase_split_condition_list = []
     for file in phase_file_list:
         video_number = get_video_number(file)
-        vid_data, new_label_clip, cond_label = get_corresponding_data(video_number)
+        vid_data, new_label_clip, cond_label = get_corresponding_data(video_number, emotions_task)
         phase_split_vid_data_list.append(vid_data)
         phase_split_label_list.append(new_label_clip)
         phase_split_condition_list.append(cond_label)
@@ -84,11 +87,12 @@ class VideoDataset(Dataset):
         return video_clip_data, label, cond_label
 
 
+emotions_task = True
 # Get Train-Validation Split
 train_validation_split_file = "C:/Users/User/Downloads/Train_Validation_Split.csv"
 train_validation_split = np.loadtxt(train_validation_split_file, delimiter=',', dtype=str)
 train_validation_split = train_validation_split.tolist()
-train_validation_vid_data_list, train_validation_label_list, train_validation_condition_list = get_split_data("Train-Validation", train_validation_split)
+train_validation_vid_data_list, train_validation_label_list, train_validation_condition_list = get_split_data("Train-Validation", train_validation_split, emotions_task)
 train_validation_dataset = VideoDataset(train_validation_vid_data_list, train_validation_label_list, train_validation_condition_list)
 
 # Configure Model to 16 Frames
@@ -100,12 +104,10 @@ model = VivitModel.from_pretrained("google/vivit-b-16x2-kinetics400", config=con
 for param in model.parameters():
     param.requires_grad = False
 
-# If emotions then True, else emotional dimensions/attributes
-emotions_category = True
 criterion = nn.BCEWithLogitsLoss()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
-if emotions_category is True:
+if emotions_task is True:
     head = torch.nn.Linear(768, 7)
 else:
     head = torch.nn.Linear(768, 3)
@@ -114,8 +116,10 @@ optimizer = torch.optim.Adam(
     list(model.parameters()) + list(head.parameters()),
     lr=1e-4
 )
-# num_epochs = 20
-num_epochs = 5
+if emotions_task is True: 
+    num_epochs = 10
+else:
+    num_epochs = 20
 
 
 for epoch in range(num_epochs):
@@ -154,8 +158,8 @@ for epoch in range(num_epochs):
 
     train_pred_temp = torch.cat(train_pred_array, dim=0)
     train_label_temp = torch.cat(train_label_array, dim=0)
-    train_preds_array = train_pred_temp.view(-1).numpy()
-    train_labels_array = train_label_temp.view(-1).numpy()
+    train_preds_array = train_pred_temp.view(-1).detach().cpu().numpy()
+    train_labels_array = train_label_temp.view(-1).detach().cpu().numpy()
 
     train_accuracy = accuracy_score(train_labels_array, train_preds_array)
     train_loss = total_train_loss / len(train_dataloader)
@@ -202,7 +206,10 @@ for epoch in range(num_epochs):
 
 
 # Load Model for Evaluation
-weights_file = f"video_weights_epoch{num_epochs}_emotions_mlc.pth"
+if emotions_task is True:
+    weights_file = f"video_weights_epoch{num_epochs}_emotions_mlc.pth"
+else:
+    weights_file = f"video_weights_epoch{num_epochs}_attributes_mlc.pth"
 checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
 head.load_state_dict(checkpoint['head_state_dict'])
@@ -211,7 +218,7 @@ head.load_state_dict(checkpoint['head_state_dict'])
 test_split_file = "C:/Users/User/Downloads/Test_Split.csv"
 test_split = np.loadtxt(test_split_file, delimiter=',', dtype=str)
 test_split = test_split.tolist()
-test_split_vid_data_list, test_split_label_list, test_split_condition_list = get_split_data("Test", test_split)
+test_split_vid_data_list, test_split_label_list, test_split_condition_list = get_split_data("Test", test_split, emotions_task)
 
 test_dataset = VideoDataset(test_split_vid_data_list, test_split_label_list, test_split_condition_list)
 test_dataloader = DataLoader(test_dataset, batch_size=4)
