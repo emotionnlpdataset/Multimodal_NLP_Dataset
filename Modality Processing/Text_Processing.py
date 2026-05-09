@@ -5,9 +5,7 @@ import pandas as pd
 import os
 from transformers import AutoModel, AutoTokenizer
 import torch.nn as nn
-import csv
 from barbar import Bar
-from itertools import chain
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
 
 path_to_folder = "path/to/folder/"
@@ -32,7 +30,7 @@ def get_corresponding_data(video_number, input_ids, attention_masks, emotions_ta
     label_clip = labels_data[video_number]
     label_clip = label_clip.astype(float)
 
-    condition_label_file = "C:/Users/User/PycharmProjects/Research Project/Condition_Labels.csv"
+    condition_label_file = "C:/Users/User/PycharmProjects/Research Project/Condition_Labels."
     condition_label = pd.read_csv(condition_label_file)
     cond_label = condition_label['Neurodivergent'].loc[video_number]
     # Yes (1): Autism/Neurodivergent, No (0): Normal/Neurotypical
