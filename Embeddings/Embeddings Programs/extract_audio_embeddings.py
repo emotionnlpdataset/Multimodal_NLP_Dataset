@@ -31,7 +31,6 @@ def get_corresponding_data(video_number, emotions_task):
 def make_whole_dataset(emotions_task):
     whole_audio_file_list = []
     whole_label_list = []
-    whole_condition_list = []
     for i in range(1000):
         audio_file, label_clip = get_corresponding_data(i + 1, emotions_task)
         whole_audio_file_list.append(audio_file)
@@ -92,7 +91,7 @@ model.to(device)
 
 # Testing
 with torch.no_grad():
-    for audio_input, label, cond_label in Bar(whole_loader):
+    for audio_input, label in Bar(whole_loader):
         inputs = {k: v.to(device) for k, v in audio_input.items()}
         label = label.to(device)
         output = model(**inputs)
@@ -110,8 +109,6 @@ audio_embedding = np.asarray(audio_embedding, dtype=np.float32)
 audio_embedding = np.squeeze(audio_embedding)
 np.save(audio_embedding_file_npy, audio_embedding)
 print("Audio Embeddings Saved")
-
-
 
 
 
