@@ -1,15 +1,15 @@
 import numpy as np
 import pandas as pd
 import os
+import sys
 import h5py
 import torch
 from torch.utils.data import Dataset, DataLoader, Subset
 import torch.nn as nn
-from barbar import Bar
-import sys
 import torchvision
 from transformers import VivitImageProcessor, VivitModel, VivitConfig
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
+from barbar import Bar
 
 path_to_folder = "path/to/folder/"
 
