@@ -32,19 +32,19 @@ def get_video_number(file_path):
 
 
 def get_corresponding_data(video_number, emotions_task):
-    audio_folder = "C:/Users/User/OneDrive/Documents/Research Project Cleaned Audio Files/"
+    audio_folder = os.path.join(path_to_folder, "Research Project Cleaned Audio Files/")
     audio_filename = "cleanedVideo" + str(video_number) + ".mp3"
     audio_file = os.path.join(audio_folder, audio_filename)
 
     if emotions_task is True:
-        labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+        labels_file = os.path.join(path_to_folder, "New_Labels_By_Classification_Emotions_Threshold15.npy")
     else:
-        labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_By_Classification_Attributes.npy"
+        labels_file = os.path.join(path_to_folder, "Revised_New_Labels_By_Classification_Attributes.npy")
     labels_data = np.load(labels_file)
     label_clip = labels_data[video_number - 1]
     label_clip = label_clip.astype(float)
 
-    condition_label_file = "C:/Users/User/PycharmProjects/Research Project/Condition_Labels.csv"
+    condition_label_file = os.path.join(path_to_folder, "Condition_Labels.csv")
     condition_label = pd.read_csv(condition_label_file)
     cond_label = condition_label['Neurodivergent'].loc[video_number - 1]
     # Yes (1): Autism/Neurodivergent, No (0): Normal/Neurotypical
@@ -122,7 +122,7 @@ emotions_task = True  # Change to False if task is Emotional Dimensions
 pretrained_processor = Wav2Vec2FeatureExtractor.from_pretrained("facebook/wav2vec2-base-960h")
 model = Wav2Vec2Model.from_pretrained("superb/wav2vec2-base-superb-er")
 
-train_validation_split_file = "C:/Users/User/PycharmProjects/Research Project/Train_Validation_Split.csv"
+train_validation_split_file = os.path.join(path_to_folder, "Train_Validation_Split.csv")
 train_validation_split = np.loadtxt(train_validation_split_file, delimiter=',', dtype=str)
 train_validation_split = train_validation_split.tolist()
 
@@ -253,7 +253,7 @@ model.load_state_dict(checkpoint['model_state_dict'])
 classifier.load_state_dict(checkpoint['classifier_state_dict'])
 
 # Get Test Split Data
-test_split_file = "C:/Users/User/PycharmProjects/Research Project/Test_Split.csv"
+test_split_file = os.path.join(path_to_folder, "Test_Split.csv")
 test_split = np.loadtxt(test_split_file, delimiter=',', dtype=str)
 test_split = test_split.tolist()
 test_split_audio_file_list, test_split_label_list, test_split_condition_list = get_split_data("Test", test_split, emotions_task)
