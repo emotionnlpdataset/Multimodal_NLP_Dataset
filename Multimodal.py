@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--emotions_task", action="store_true", required=True, help="True if running emotional classification task; False if running emotional dimensional classification task")
-    parser.add_argument("--path_to_folder", action="store_true", required=True, help="Path to working directory")
+    parser.add_argument("--path_to_folder", type=str, required=True, help="Path to working directory")
 
     args = parser.parse_args()
 
