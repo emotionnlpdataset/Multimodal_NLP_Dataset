@@ -126,9 +126,9 @@ if emotions_task is True:
     video_embeddings_file = os.path.join(path_to_folder, "video_embeddings_pretrained_emotions_mlc.npy")
     labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.csv"
 else:
-    audio_embeddings_file = os.path.join(path_to_folder, "audio_embeddings_pretrained_emotions_mlc_wav2vec2.npy")
-    text_embeddings_file = os.path.join(path_to_folder, "text_embeddings_pretrained_emotions_mlc.npy")
-    video_embeddings_file = os.path.join(path_to_folder, "video_embeddings_pretrained_emotions_mlc.npy")    
+    audio_embeddings_file = os.path.join(path_to_folder, "audio_embeddings_pretrained_attributes_mlc_wav2vec2.npy")
+    text_embeddings_file = os.path.join(path_to_folder, "text_embeddings_pretrained_attributes_mlc.npy")
+    video_embeddings_file = os.path.join(path_to_folder, "video_embeddings_pretrained_attributes_mlc.npy")    
     labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_By_Classification_Attributes.csv"
 
 audio_embeddings = np.load(audio_embeddings_file)
