@@ -6,11 +6,25 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader, Subset
 from barbar import Bar
+import argparse
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
 
+emotions_task = True
 path_to_folder = "path/to/folder/"
 
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--emotions_task", action="store_true")
+    parser.add_argument("--path_to_folder", action="store_true")
+
+    args = parser.parse_args()
+
+    emotions_task = args.emotions_task
+    path_to_folder = args.path_to_folder
+
+    
 def get_video_number(file_path):
     base_filename = os.path.basename(file_path)
     video_number = base_filename.split("eo")[1]
@@ -119,7 +133,6 @@ class MultimodalModelEmotionalDimensions(nn.Module):
         return x
 
 
-emotions_task = True
 if emotions_task is True:
     audio_embeddings_file = os.path.join(path_to_folder, "audio_embeddings_pretrained_emotions_mlc_wav2vec2.npy")
     text_embeddings_file = os.path.join(path_to_folder, "text_embeddings_pretrained_emotions_mlc.npy")
