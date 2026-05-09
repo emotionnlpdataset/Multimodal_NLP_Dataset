@@ -79,7 +79,7 @@ else:
 checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
 
-whole_audio_file_list, whole_label_list = make_whole_dataset()
+whole_audio_file_list, whole_label_list = make_whole_dataset(emotions_task)
 whole_dataset = AudioDataset(whole_audio_file_list, whole_label_list)
 
 whole_loader = DataLoader(whole_dataset, batch_size=4, collate_fn=collate_fn)
