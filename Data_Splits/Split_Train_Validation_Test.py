@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
 import os
-from pathlib import Path
-from natsort import natsorted
 import random
 import csv
 
