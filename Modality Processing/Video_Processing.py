@@ -5,7 +5,6 @@ import h5py
 import torch
 from torch.utils.data import Dataset, DataLoader, Subset
 import torch.nn as nn
-import torch.nn.functional as F
 from barbar import Bar
 import sys
 import csv
