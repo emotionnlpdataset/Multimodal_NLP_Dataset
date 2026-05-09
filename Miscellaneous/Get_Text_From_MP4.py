@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 import assemblyai as aai
 import cv2
-from Find_Timestamps_Scene_Changes import *
+
 
 def get_clip_duration(video_path):
     video = cv2.VideoCapture(video_path)
@@ -12,6 +12,7 @@ def get_clip_duration(video_path):
     duration_s = round(frame_count / fps, 2)
     video.release()
     return duration_s
+
 
 aai.settings.api_key = "07158802fd464ca197307f185e84f9f3"
 folder = "C:/Users/User/OneDrive/Documents/Research Project Data - Copy/"
