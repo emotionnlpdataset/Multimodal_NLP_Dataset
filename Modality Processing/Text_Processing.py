@@ -21,12 +21,6 @@ def get_video_number(file_path):
     return video_number
 
 
-def normalize_label(label):
-    new_label = label / 100.0
-    # new_label = (new_label + 3) / 6
-    return new_label
-
-
 def get_corresponding_data(video_number, input_ids, attention_masks):
     input_id = input_ids[video_number]
     attention_mask = attention_masks[video_number]
