@@ -7,10 +7,8 @@ from transformers import AutoModel, AutoTokenizer
 import torch.nn as nn
 import csv
 import ast
-import h5py
 from barbar import Bar
 from natsort import natsorted
-from itertools import chain
 
 
 def get_corresponding_data(video_number, input_ids, attention_masks, emotions_task):
