@@ -314,9 +314,14 @@ print(f"Audio Test Loss: {test_loss:.6f}")
 print(f"Audio Test F1_Micro: {test_f1_micro:.5f}")
 print(f"Audio Test F1_Macro: {test_f1_macro:.5f}")
 print(f"Audio Test F1_Weighted: {test_f1_weighted:.5f}")
-print(f"Audio Test F1 Per Attribute:")
-for l, f in zip(label_attribute_names, test_f1_per_label):
-    print(f"{l}: {f:.5f}")
+if emotions_task is True:
+    print(f"Audio Test F1 Per Emotion:")
+    for l, f in zip(label_emotion_names, test_f1_per_label):
+        print(f"{l}: {f:.5f}")
+else:
+    print(f"Audio Test F1 Per Attribute:")
+    for l, f in zip(label_attribute_names, test_f1_per_label):
+        print(f"{l}: {f:.5f}")
 
 
 
