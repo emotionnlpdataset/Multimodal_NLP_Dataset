@@ -21,11 +21,14 @@ def get_video_number(file_path):
     return video_number
 
 
-def get_corresponding_data(video_number, input_ids, attention_masks):
+def get_corresponding_data(video_number, input_ids, attention_masks, emotions_task):
     input_id = input_ids[video_number]
     attention_mask = attention_masks[video_number]
 
-    labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+    if emotions_task is True:
+        labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+    else:
+        labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_Classification_Attributes.npy"
     labels_data = np.load(labels_file)
     label_clip = labels_data[video_number]
     label_clip = label_clip.astype(float)
@@ -38,28 +41,14 @@ def get_corresponding_data(video_number, input_ids, attention_masks):
     return input_id, attention_mask, label_clip, cond_label
 
 
-def make_whole_dataset(input_ids, attention_masks):
-    whole_text_input_ids_list = []
-    whole_attention_masks_list = []
-    whole_label_list = []
-    whole_condition_list = []
-    for i in range(1000):
-        text_input_id, attention_mask, new_label_clip, condition_label = get_corresponding_data(i, input_ids, attention_masks)
-        whole_text_input_ids_list.append(text_input_id)
-        whole_attention_masks_list.append(attention_mask)
-        whole_label_list.append(new_label_clip)
-        whole_condition_list.append(condition_label)
-    return whole_text_input_ids_list, whole_attention_masks_list, whole_label_list, whole_condition_list
-
-
-def get_split_data(phase_split, phase_file_list, input_ids, attention_masks):
+def get_split_data(phase_split, phase_file_list, input_ids, attention_masks, emotions_task):
     phase_split_text_input_ids_list = []
     phase_split_attention_masks_list = []
     phase_split_label_list = []
     phase_split_condition_list = []
     for file in phase_file_list:
         video_number = get_video_number(file)
-        text_input_id, attention_mask, new_label_clip, condition_label = get_corresponding_data(video_number-1, input_ids, attention_masks)
+        text_input_id, attention_mask, new_label_clip, condition_label = get_corresponding_data(video_number-1, input_ids, attention_masks, emotions_task)
         phase_split_text_input_ids_list.append(text_input_id)
         phase_split_attention_masks_list.append(attention_mask)
         phase_split_label_list.append(new_label_clip)
@@ -80,7 +69,7 @@ model_name = "distilbert-base-uncased"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 base_model = AutoModel.from_pretrained(model_name)
 
-class TextModel(nn.Module):
+class TextModelEmotions(nn.Module):
     def __init__(self):
         super().__init__()
         self.bert = base_model
@@ -89,6 +78,26 @@ class TextModel(nn.Module):
             nn.ReLU(),
             nn.Dropout(0.3),
             nn.Linear(256, 7)
+        )
+
+    def forward(self, inputs_ids, attention_mask, return_embedding=False):
+        outputs = self.bert(input_ids=inputs_ids, attention_mask=attention_mask)
+        x_embedding = outputs.last_hidden_state.mean(dim=1)
+        x = self.fc(x_embedding)
+        if return_embedding is True:
+            return x, x_embedding
+        return x
+
+
+class TextModelEmotionalDimensions(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.bert = base_model
+        self.fc = nn.Sequential(
+            nn.Linear(768, 256),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(256, 3)
         )
 
     def forward(self, inputs_ids, attention_mask, return_embedding=False):
@@ -119,6 +128,7 @@ class TextDataset(Dataset):
         return text_input, attention_mask, label, cond_label
 
 
+emotions_task = True  # Change if Emotional Dimensions Task
 text_preprocessing_file = "C:/Users/User/Downloads/Text_Preprocessing.txt"
 with open(text_preprocessing_file, 'r') as f:
     content = f.read()
@@ -130,13 +140,17 @@ attention_masks = text_inputs['attention_mask']
 train_validation_file = "C:/Users/User/Downloads/Train_Validation_Split.csv"
 train_validation_split = np.loadtxt(train_validation_file, delimiter=',', dtype=str)
 train_validation_split = train_validation_split.tolist()
-train_validation_split_text_input_ids_list, train_validation_split_attention_masks_list, train_validation_split_label_list, train_validation_split_condition_list = get_split_data("Train-Validation", train_validation_split, text_input_ids, attention_masks)
+train_validation_split_text_input_ids_list, train_validation_split_attention_masks_list, train_validation_split_label_list, train_validation_split_condition_list = get_split_data("Train-Validation", train_validation_split, text_input_ids, attention_masks, emotions_task)
 train_validation_dataset = TextDataset(train_validation_split_text_input_ids_list, train_validation_split_attention_masks_list, train_validation_split_label_list, train_validation_split_condition_list)
 
-model = TextModel()
+if emotions_task is True:
+    num_epochs = 20
+    model = TextModelEmotions()
+else:
+    num_epochs = 20
+    model = TextModelEmotionalDimensions()
 criterion = nn.BCEWithLogitsLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
-num_epochs = 20
 
 
 model.train()
@@ -171,8 +185,8 @@ for epoch in range(num_epochs):
 
     train_pred_temp = torch.cat(train_pred_array, dim=0)
     train_label_temp = torch.cat(train_label_array, dim=0)
-    train_preds_array = train_pred_temp.view(-1).numpy()
-    train_labels_array = train_label_temp.view(-1).numpy()
+    train_preds_array = train_pred_temp.view(-1).detach().cpu().numpy()
+    train_labels_array = train_label_temp.view(-1).detach().cpu().numpy()
 
     train_accuracy = accuracy_score(train_labels_array, train_preds_array)
     train_loss = train_total_loss / len(train_loader)
@@ -197,22 +211,32 @@ for epoch in range(num_epochs):
 
         val_pred_temp = torch.cat(val_pred_array, dim=0)
         val_label_temp = torch.cat(val_label_array, dim=0)
-        val_preds_array = val_pred_temp.view(-1).numpy()
-        val_labels_array = val_label_temp.view(-1).numpy()
+        val_preds_array = val_pred_temp.view(-1).detach().cpu().numpy()
+        val_labels_array = val_label_temp.view(-1).detach().cpu().numpy()
 
         val_accuracy = accuracy_score(val_labels_array, val_preds_array)
         valid_loss = valid_total_loss / len(valid_loader)
         print(f"Text Epoch {epoch+1}, Val Accuracy: {val_accuracy:.5f}, Val Loss: {valid_loss:.6f}")
 
     if epoch == (num_epochs - 1):
-        torch.save({
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'loss': loss.item()
-        }, f"text_weights_epoch{num_epochs}_emotions_mlc.pth")
+        if emotions_task is True:
+            torch.save({
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': loss.item()
+            }, f"text_weights_epoch{num_epochs}_emotions_mlc.pth")
+        else:
+            torch.save({
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': loss.item()
+            }, f"text_weights_epoch{num_epochs}_attributes_mlc.pth")
 
 
-weights_file = f"text_weights_epoch{num_epochs}_emotions_mlc.pth"
+if emotions_task is True:
+    weights_file = f"text_weights_epoch{num_epochs}_emotions_mlc.pth"
+else:
+    weights_file = f"text_weights_epoch{num_epochs}_attributes_mlc.pth"
 checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
 
@@ -220,7 +244,7 @@ model.load_state_dict(checkpoint['model_state_dict'])
 test_split_file = "C:/Users/User/Downloads/Test_Split.csv"
 test_split = np.loadtxt(test_split_file, delimiter=',', dtype=str)
 test_split = test_split.tolist()
-test_split_text_input_ids_list, test_split_attention_masks_list, test_split_label_list, test_split_condition_list = get_split_data("Test", test_split, text_input_ids, attention_masks)
+test_split_text_input_ids_list, test_split_attention_masks_list, test_split_label_list, test_split_condition_list = get_split_data("Test", test_split, text_input_ids, attention_masks, emotions_task)
 test_dataset = TextDataset(test_split_text_input_ids_list, test_split_attention_masks_list, test_split_label_list, test_split_condition_list)
 test_loader = DataLoader(test_dataset, batch_size=16)
 
@@ -263,9 +287,14 @@ print(f"Text Test Loss: {test_loss:.6f}")
 print(f"Text Test F1_Micro: {test_f1_micro:.5f}")
 print(f"Text Test F1_Macro: {test_f1_macro:.5f}")
 print(f"Text Test F1_Weighted: {test_f1_weighted:.5f}")
-print(f"Text Test F1 Per Emotion:")
-for l, f in zip(label_emotion_names, test_f1_per_label):
-    print(f"{l}: {f:.5f}")
+if emotions_task is True:
+    print(f"Text Test F1 Per Emotion:")
+    for l, f in zip(label_emotion_names, test_f1_per_label):
+        print(f"{l}: {f:.5f}")
+else:
+    print(f"Text Test F1 Per Attribute:")
+    for l, f in zip(label_attribute_names, test_f1_per_label):
+        print(f"{l}: {f:.5f}")
 
 
 
