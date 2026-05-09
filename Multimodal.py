@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
+import sys
+import os
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader, Subset
 from barbar import Bar
-import sys
-import os
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
 
 path_to_folder = "path/to/folder/"
