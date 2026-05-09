@@ -15,7 +15,6 @@ import torchvision
 from transformers import VivitImageProcessor, VivitModel, VivitConfig
 from natsort import natsorted
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
-np.set_printoptions(threshold=sys.maxsize, linewidth=np.inf)
 
 
 def get_video_number(file_path):
