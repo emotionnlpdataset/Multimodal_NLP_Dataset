@@ -28,7 +28,11 @@ If running using an application, make sure to comment out the main guard before 
 Models used for this research project can be found at:
 https://huggingface.co/multimodalemotionnlp/Neurodiverse_NLP_Models
 
-Please install all necessary Python packages (as seen in the Requirements.txt file) before running any programs. 
+Label Files can be found in this GitHub repository
+For the emotional classification task: Labels_File/New_Labels_By_Classification_Emotions_Threshold15.npy
+For the emotional dimensions classification task: Labels_File/Revised_New_Labels_By_Classification_Attributes.npy
+
+Note: Please install all necessary Python packages (as seen in the Requirements.txt file) before running any programs. 
 
 
 
