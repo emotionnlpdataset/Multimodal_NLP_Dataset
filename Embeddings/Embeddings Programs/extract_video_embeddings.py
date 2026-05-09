@@ -16,7 +16,7 @@ from natsort import natsorted
 
 
 def get_corresponding_data(video_number, emotions_task):
-    hdf5_folder = r"C:/Users/User/OneDrive/Documents/ResearchProjectHDF5Files/"
+    hdf5_folder = "C:/Users/User/OneDrive/Documents/ResearchProjectHDF5Files/"
     hdf5_filename = "output_Video" + str(video_number) + ".h5"
     hdf5_file = os.path.join(hdf5_folder, hdf5_filename)
     with h5py.File(hdf5_file, 'r') as f:
@@ -51,7 +51,7 @@ if emotions_task is True:
     num_epochs = 10
     weights_file = f"video_weights_epoch{num_epochs}_emotions_mlc.pth"
 else:
-    num_epochs = 10
+    num_epochs = 20
     weights_file = f"video_weights_epoch{num_epochs}_attributes_mlc.pth"
 
 config = VivitConfig.from_pretrained("google/vivit-b-16x2-kinetics400")
