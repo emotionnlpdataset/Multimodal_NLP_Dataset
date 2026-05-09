@@ -10,6 +10,8 @@ from barbar import Bar
 from itertools import chain
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
 
+path_to_folder = "path/to/folder/"
+
 
 def get_video_number(file_path):
     file = os.path.basename(file_path)
