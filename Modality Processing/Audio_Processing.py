@@ -10,7 +10,28 @@ from transformers import Wav2Vec2Model, Wav2Vec2Processor, Wav2Vec2ForSequenceCl
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
 from barbar import Bar
 
+emotions_task = True
 path_to_folder = "path/to/folder/"
+
+def str2bool(v):
+    if v.lower() == "true":
+        return True
+    elif v.lower() == "false":
+        return False
+    else:
+        raise argparse.ArgumentTypeError("Must be True (emotional classification task) or False (emotional dimension classification task)")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--emotions_task", type=str2bool, required=True, help="True if running emotional classification task; False if running emotional dimensional classification task")
+    parser.add_argument("--path_to_folder", type=str, required=True, help="Path to working directory")
+
+    args = parser.parse_args()
+
+    emotions_task = args.emotions_task
+    path_to_folder = args.path_to_folder
+
 
 
 def load_audio(file_path):
@@ -117,7 +138,6 @@ def return_train_and_valid_data(train_validation_split, epoch, emotions_task):
     return train_split_audio_file_list, train_split_label_list, train_split_condition_list, validation_split_audio_file_list, validation_split_label_list, validation_split_condition_list
 
 
-emotions_task = True  # Change to False if task is Emotional Dimensions
 # Load Pretrained Wav2Vec2
 pretrained_processor = Wav2Vec2FeatureExtractor.from_pretrained("facebook/wav2vec2-base-960h")
 model = Wav2Vec2Model.from_pretrained("superb/wav2vec2-base-superb-er")
