@@ -13,11 +13,12 @@ from natsort import natsorted
 from itertools import chain
 
 
-def get_corresponding_data(video_number, input_ids, attention_masks):
+def get_corresponding_data(video_number, input_ids, attention_masks, emotions_task):
     input_id = input_ids[video_number]
     attention_mask = attention_masks[video_number]
 
-    labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+    if emotions_task is True:
+        labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
     labels_data = np.load(labels_file)
     label_clip = labels_data[video_number]
     label_clip = label_clip.astype(float)
@@ -25,13 +26,13 @@ def get_corresponding_data(video_number, input_ids, attention_masks):
     return input_id, attention_mask, label_clip
 
 
-def make_whole_dataset(input_ids, attention_masks):
+def make_whole_dataset(input_ids, attention_masks, emotions_task):
     whole_text_input_ids_list = []
     whole_attention_masks_list = []
     whole_label_list = []
     whole_condition_list = []
     for i in range(1000):
-        text_input_id, attention_mask, new_label_clip, condition_label = get_corresponding_data(i, input_ids, attention_masks)
+        text_input_id, attention_mask, new_label_clip, condition_label = get_corresponding_data(i, input_ids, attention_masks, emotions_task)
         whole_text_input_ids_list.append(text_input_id)
         whole_attention_masks_list.append(attention_mask)
         whole_label_list.append(new_label_clip)
@@ -120,7 +121,7 @@ text_inputs = tokenizer(text_preprocessing_data, padding=True, truncation=True, 
 text_input_ids = text_inputs['input_ids']
 attention_masks = text_inputs['attention_mask']
 
-whole_text_input_ids_list, whole_attention_masks_list, whole_label_list = make_whole_dataset(text_input_ids, attention_masks)
+whole_text_input_ids_list, whole_attention_masks_list, whole_label_list = make_whole_dataset(text_input_ids, attention_masks, emotions_task)
 whole_dataset = TextDataset(whole_text_input_ids_list, whole_attention_masks_list, whole_label_list)
 whole_loader = DataLoader(whole_dataset, batch_size=16)
 
