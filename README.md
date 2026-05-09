@@ -21,5 +21,7 @@ After pressing enter, you can enter any of the four main files (Audio_Processing
 If you want to run the emotions task, make sure you set emotions_task = True
 If you want to run the emotional dimensions task, make sure you set emotions_task = False
 
+Please install all necessary Python packages (as seen in the Requirements.txt file) before running any programs. 
+
 
 
