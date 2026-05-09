@@ -138,7 +138,7 @@ train_validation_split_audio_embeddings_list, train_validation_split_text_embedd
 train_validation_dataset = MultimodalDataset(train_validation_split_audio_embeddings_list, train_validation_split_text_embeddings_list, train_validation_split_video_embeddings_list, train_validation_split_label_list, train_validation_split_condition_list)
 
 if emotions_task is True:
-    model = MultimodalModel()
+    model = MultimodalModelEmotions()
 else:
     model = MultimodalModelEmotionalDimensions()
 criterion = nn.BCEWithLogitsLoss()
