@@ -23,7 +23,7 @@ There are two ways of running a program:
 In the cmd terminal, navigate to the directory that the program exists in.
 Example (if running Multimodal.py and performing the emotional dimensions classification task and your path_to_folder is path/to/folder/):
 
-```bash
+```
 python Multimodal.py --emotions_task False --path_to_folder path/to/folder/
 
 --emotions_task: True  - Emotion Classification Task
