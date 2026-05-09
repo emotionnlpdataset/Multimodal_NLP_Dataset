@@ -1,13 +1,11 @@
 import numpy as np
 import os
-import cv2
 import math
 from moviepy.editor import VideoFileClip, ImageSequenceClip
 import moviepy.editor as mp
 import pandas as pd
 import h5py
 import sys
-from Find_Timestamps_Scene_Changes import *
 
 
 def frame_extraction_clips(video_clip, num_samples):
