@@ -9,7 +9,31 @@ import os
 import sys
 import csv
 from natsort import natsorted
+from itertools import chain
 from transformers import Wav2Vec2Model, Wav2Vec2Processor, Wav2Vec2ForSequenceClassification, Wav2Vec2FeatureExtractor
+
+emotions_task = True
+path_to_folder = "path/to/folder/"
+
+def str2bool(v):
+    if v.lower() == "true":
+        return True
+    elif v.lower() == "false":
+        return False
+    else:
+        raise argparse.ArgumentTypeError("Must be True (emotional classification task) or False (emotional dimension classification task)")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--emotions_task", type=str2bool, required=True, help="True if running emotional classification task; False if running emotional dimensional classification task")
+    parser.add_argument("--path_to_folder", type=str, required=True, help="Path to working directory")
+
+    args = parser.parse_args()
+
+    emotions_task = args.emotions_task
+    path_to_folder = args.path_to_folder
+
 
 
 def get_corresponding_data(video_number, emotions_task):
@@ -67,7 +91,6 @@ def collate_fn(batch):
     return inputs, labels
 
 
-emotions_task = True  # Change to False if emotional_dimensions
 pretrained_processor = Wav2Vec2FeatureExtractor.from_pretrained("facebook/wav2vec2-base-960h")
 model = Wav2Vec2Model.from_pretrained("superb/wav2vec2-base-superb-er")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
