@@ -12,17 +12,26 @@ from sklearn.metrics import f1_score, classification_report, accuracy_score, con
 emotions_task = True
 path_to_folder = "path/to/folder/"
 
+def str2bool(v):
+    if v.lower() == "true":
+        return True
+    elif v.lower() == "false":
+        return False
+    else:
+        raise argparse.ArgumentTypeError("Must be True (emotional classification task) or False (emotional dimension classification task)")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--emotions_task", action="store_true", required=True, help="True if running emotional classification task; False if running emotional dimensional classification task")
+    parser.add_argument("--emotions_task", type=str2bool, required=True, help="True if running emotional classification task; False if running emotional dimensional classification task")
     parser.add_argument("--path_to_folder", type=str, required=True, help="Path to working directory")
 
     args = parser.parse_args()
 
     emotions_task = args.emotions_task
     path_to_folder = args.path_to_folder
+
 
     
 def get_video_number(file_path):
