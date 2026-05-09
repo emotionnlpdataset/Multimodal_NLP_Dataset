@@ -1,0 +1,29 @@
+Requirements.txt
+
+numpy: 1.26.4
+pandas: 3.0.1
+torch: 2.10.0
+torchaudio: 2.11.0
+torchvision: 0.25.0
+barbar: 0.2.1
+transformers: 5.3.0
+scikit-learn: 1.8.0
+moviepy: 2.1.2
+csv: 1.0
+h5py: 3.14.0
+deepfilternet: 0.5.6
+pydub: 0.25.1
+bs4: 4.14.3
+contractions: 0.1.73
+nltk: 3.9.4
+pathlib: 1.0.1
+natsort: 8.4.0
+assemblyai: 0.64.0
+opencv: 4.13.0
+matplotlib: 3.10.8
+librosa: 0.11.0
+
+
+
+
+
