@@ -13,6 +13,29 @@ import torchvision
 from transformers import VivitImageProcessor, VivitModel, VivitConfig
 from natsort import natsorted
 
+emotions_task = True
+path_to_folder = "path/to/folder/"
+
+def str2bool(v):
+    if v.lower() == "true":
+        return True
+    elif v.lower() == "false":
+        return False
+    else:
+        raise argparse.ArgumentTypeError("Must be True (emotional classification task) or False (emotional dimension classification task)")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--emotions_task", type=str2bool, required=True, help="True if running emotional classification task; False if running emotional dimensional classification task")
+    parser.add_argument("--path_to_folder", type=str, required=True, help="Path to working directory")
+
+    args = parser.parse_args()
+
+    emotions_task = args.emotions_task
+    path_to_folder = args.path_to_folder
+
+
 
 def get_corresponding_data(video_number, emotions_task):
     hdf5_folder = "C:/Users/User/OneDrive/Documents/ResearchProjectHDF5Files/"
@@ -59,14 +82,12 @@ class VideoDataset(Dataset):
         return video_clip_data, label
 
 
-emotions_task = True
 if emotions_task is True:
     num_epochs = 10
     weights_file = f"video_weights_epoch{num_epochs}_emotions_mlc.pth"
 else:
     num_epochs = 20
     weights_file = f"video_weights_epoch{num_epochs}_attributes_mlc.pth"
-
 config = VivitConfig.from_pretrained("google/vivit-b-16x2-kinetics400")
 config.num_frames = 16
 model = VivitModel.from_pretrained("google/vivit-b-16x2-kinetics400", config=config, ignore_mismatched_sizes=True)
