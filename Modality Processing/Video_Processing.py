@@ -11,7 +11,28 @@ from transformers import VivitImageProcessor, VivitModel, VivitConfig
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
 from barbar import Bar
 
+emotions_task = True
 path_to_folder = "path/to/folder/"
+
+def str2bool(v):
+    if v.lower() == "true":
+        return True
+    elif v.lower() == "false":
+        return False
+    else:
+        raise argparse.ArgumentTypeError("Must be True (emotional classification task) or False (emotional dimension classification task)")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--emotions_task", type=str2bool, required=True, help="True if running emotional classification task; False if running emotional dimensional classification task")
+    parser.add_argument("--path_to_folder", type=str, required=True, help="Path to working directory")
+
+    args = parser.parse_args()
+
+    emotions_task = args.emotions_task
+    path_to_folder = args.path_to_folder
+
 
 
 def get_video_number(file_path):
@@ -85,7 +106,6 @@ class VideoDataset(Dataset):
         return video_clip_data, label, cond_label
 
 
-emotions_task = True  # Change to False if task is Emotional Dimensions
 # Get Train-Validation Split
 train_validation_split_file = os.path.join(path_to_folder, "Train_Validation_Split.csv")
 train_validation_split = np.loadtxt(train_validation_split_file, delimiter=',', dtype=str)
