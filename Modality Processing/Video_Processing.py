@@ -7,7 +7,6 @@ from torch.utils.data import Dataset, DataLoader, Subset
 import torch.nn as nn
 from barbar import Bar
 import sys
-from itertools import chain
 import torchvision
 from transformers import VivitImageProcessor, VivitModel, VivitConfig
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
