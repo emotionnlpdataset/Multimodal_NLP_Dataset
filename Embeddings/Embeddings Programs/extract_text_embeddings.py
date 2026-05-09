@@ -99,18 +99,16 @@ class TextDataset(Dataset):
         return text_input, attention_mask, label
 
 
-emotions_category = True
-if emotions_category is True:
+emotions_task = True
+if emotions_task is True:
     num_epochs = 20
     weights_file = f"text_weights_epoch{num_epochs}_emotions_mlc.pth"
+    model = TextModelEmotions()
 else:
     num_epochs = 20
     weights_file = f"text_weights_epoch{num_epochs}_attributes_mlc.pth"
-
-if emotions_category is True:
-    model = TextModelEmotions()
-else:
     model = TextModelEmotionalDimensions()
+
 checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
 
@@ -133,7 +131,7 @@ with torch.no_grad():
         text_embedding.append(temp_text_embedding.tolist())
 
 # Save Text Embeddings
-if emotions_category is True:
+if emotions_task is True:
     text_embedding_file_npy = "/home/user2/text_embeddings_pretrained_emotions_mlc.npy"
 else:
     text_embedding_file_npy = "/home/user2/text_embeddings_pretrained_attributes_mlc.npy"
