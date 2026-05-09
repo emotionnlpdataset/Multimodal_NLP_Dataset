@@ -19,6 +19,8 @@ def get_corresponding_data(video_number, emotions_task):
 
     if emotions_task is True:
         labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+    else: 
+        labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_By_Classification_Attributes.npy"
     labels_data = np.load(labels_file)
     label_clip = labels_data[video_number - 1]
     label_clip = label_clip.astype(float)
@@ -71,7 +73,7 @@ pretrained_processor = Wav2Vec2FeatureExtractor.from_pretrained("facebook/wav2ve
 model = Wav2Vec2Model.from_pretrained("superb/wav2vec2-base-superb-er")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 if emotions_task is True:
-    num_epochs = 10
+    num_epochs = 20
     weights_file = f"audio_weights_epoch{num_epochs}_emotions_mlc_wav2vec2.pth"
 else:
     num_epochs = 10
