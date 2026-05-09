@@ -44,6 +44,49 @@ def make_whole_dataset(input_ids, attention_masks):
     return whole_text_input_ids_list, whole_attention_masks_list, whole_label_list, whole_condition_list
 
 
+model_name = "distilbert-base-uncased"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+base_model = AutoModel.from_pretrained(model_name)
+
+class TextModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.bert = base_model
+        self.fc = nn.Sequential(
+            nn.Linear(768, 256),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(256, 7)
+        )
+
+    def forward(self, inputs_ids, attention_mask, return_embedding=False):
+        outputs = self.bert(input_ids=inputs_ids, attention_mask=attention_mask)
+        x_embedding = outputs.last_hidden_state.mean(dim=1)
+        x = self.fc(x_embedding)
+        if return_embedding is True:
+            return x, x_embedding
+        return x
+
+
+class TextDataset(Dataset):
+    def __init__(self, text_input_ids, attention_masks, labels, cond_labels):
+        super().__init__()
+        self.text_input_ids = text_input_ids
+        self.attention_masks = attention_masks
+        self.labels = labels
+        self.cond_labels = cond_labels
+
+    def __len__(self):
+        return len(self.labels)
+
+    def __getitem__(self, idx):
+        text_input = self.text_input_ids[idx]
+        attention_mask = self.attention_masks[idx]
+        label = torch.tensor(self.labels[idx], dtype=torch.float32)
+        cond_label = self.cond_labels[idx]
+        return text_input, attention_mask, label, cond_label
+
+
 emotions_category = True
 if emotions_category is True:
     num_epochs = 20
