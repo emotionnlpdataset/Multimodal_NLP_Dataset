@@ -8,7 +8,31 @@ import torch.nn as nn
 import csv
 import ast
 from barbar import Bar
+from itertools import chain
 from natsort import natsorted
+
+emotions_task = True
+path_to_folder = "path/to/folder/"
+
+def str2bool(v):
+    if v.lower() == "true":
+        return True
+    elif v.lower() == "false":
+        return False
+    else:
+        raise argparse.ArgumentTypeError("Must be True (emotional classification task) or False (emotional dimension classification task)")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--emotions_task", type=str2bool, required=True, help="True if running emotional classification task; False if running emotional dimensional classification task")
+    parser.add_argument("--path_to_folder", type=str, required=True, help="Path to working directory")
+
+    args = parser.parse_args()
+
+    emotions_task = args.emotions_task
+    path_to_folder = args.path_to_folder
+
 
 
 def get_corresponding_data(video_number, input_ids, attention_masks, emotions_task):
@@ -99,7 +123,6 @@ class TextDataset(Dataset):
         return text_input, attention_mask, label
 
 
-emotions_task = True
 if emotions_task is True:
     num_epochs = 20
     weights_file = f"text_weights_epoch{num_epochs}_emotions_mlc.pth"
@@ -108,7 +131,6 @@ else:
     num_epochs = 20
     weights_file = f"text_weights_epoch{num_epochs}_attributes_mlc.pth"
     model = TextModelEmotionalDimensions()
-
 checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
 
