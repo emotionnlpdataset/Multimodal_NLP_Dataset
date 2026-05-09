@@ -68,14 +68,18 @@ def collate_fn(batch):
     return inputs, labels
 
 
+emotions_category = True  # Change to False if emotional_dimensions
 pretrained_processor = Wav2Vec2FeatureExtractor.from_pretrained("facebook/wav2vec2-base-960h")
 model = Wav2Vec2Model.from_pretrained("superb/wav2vec2-base-superb-er")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-num_epochs = 10
-weights_file = f"audio_weights_epoch{num_epochs}_emotions_mlc_wav2vec2.pth"
+if emotions_category is True:
+    num_epochs = 10
+    weights_file = f"audio_weights_epoch{num_epochs}_emotions_mlc_wav2vec2.pth"
+else:
+    num_epochs = 10
+    weights_file = f"audio_weights_epoch{num_epochs}_attributes_mlc_wav2vec2.pth"
 checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
-classifier.load_state_dict(checkpoint['classifier_state_dict'])
 
 whole_audio_file_list, whole_label_list = make_whole_dataset()
 whole_dataset = AudioDataset(whole_audio_file_list, whole_label_list)
@@ -97,12 +101,15 @@ with torch.no_grad():
         audio_embedding.append(embeddings.squeeze().tolist())
 
 # Save Audio Embedding
-audio_embedding_file_npy = "C:/Users/User/PycharmProjects/Research Project/audio_embeddings_pretrained_emotions_mlc_wav2vec2.npy"
+if emotions_category is True:
+    audio_embedding_file_npy = "C:/Users/User/PycharmProjects/Research Project/audio_embeddings_pretrained_emotions_mlc_wav2vec2.npy"
+else:
+    audio_embedding_file_npy = "C:/Users/User/PycharmProjects/Research Project/audio_embeddings_pretrained_attributes_mlc_wav2vec2.npy"
 audio_embedding = list(chain.from_iterable(audio_embedding))
 audio_embedding = np.asarray(audio_embedding, dtype=np.float32)
 audio_embedding = np.squeeze(audio_embedding)
 np.save(audio_embedding_file_npy, audio_embedding)
-print("Audio Embedding for Emotions Saved")
+print("Audio Embeddings Saved")
 
 
 
