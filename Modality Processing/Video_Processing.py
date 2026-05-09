@@ -24,7 +24,7 @@ def get_video_number(file_path):
 
 
 def get_corresponding_data(video_number):
-    hdf5_folder = r"C:/Users/User/OneDrive/Documents/ResearchProjectHDF5Files/"
+    hdf5_folder = "C:/Users/User/OneDrive/Documents/ResearchProjectHDF5Files/"
     hdf5_filename = "output_Video" + str(video_number) + ".h5"
     hdf5_file = os.path.join(hdf5_folder, hdf5_filename)
     with h5py.File(hdf5_file, 'r') as f:
