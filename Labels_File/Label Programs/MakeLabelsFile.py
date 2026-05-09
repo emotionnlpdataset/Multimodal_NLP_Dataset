@@ -2,16 +2,10 @@ import numpy as np
 import pandas as pd
 import os
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', None)
-
 labels_file = "C:/Users/User/Downloads/Ratings Data - Sheet1.csv"
 labels_pd = pd.read_csv(labels_file)
-# print(labels_pd)
 
 new_labels_pd = labels_pd.sort_values(by="Filename", ascending=True).reset_index(drop=True)
-# print(new_labels_pd)
 
 anger_label = new_labels_pd["Anger"]
 disgust_label = new_labels_pd["Disgust"]
@@ -116,7 +110,6 @@ for i in range(1, 1001):
     table_list.append(table_row)
 
 table_pd = pd.DataFrame(data=table_list, columns=["Filename", "Anger", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral", "Valence", "Arousal", "Domination"])
-print(table_pd)
 file_to_export = "C:/Users/User/Downloads/ResearchProjectLabels.csv"
 table_pd.to_csv(file_to_export, index=False)
 
