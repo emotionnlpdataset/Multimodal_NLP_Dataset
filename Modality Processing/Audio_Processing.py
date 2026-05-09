@@ -286,14 +286,6 @@ with torch.no_grad():
         test_pred_array.append(pred.detach())
         test_label_array.append(label.detach())
 
-        for i in range(cond_label.shape[0]):
-            if cond_label[i].item() == 1:
-                neurodivergent_pred_array.append(pred[i].detach())
-                neurodivergent_label_array.append(label[i].detach())
-            elif cond_label[i].item() == 0:
-                neurotypical_pred_array.append(pred[i].detach())
-                neurotypical_label_array.append(label[i].detach())
-
         total_test_loss += loss.item()
 
 test_pred_temp = torch.cat(test_pred_array, dim=0)
