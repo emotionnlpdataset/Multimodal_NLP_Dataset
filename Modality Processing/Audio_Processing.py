@@ -7,7 +7,6 @@ import torch
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 import torch.nn as nn
-import torch.nn.functional as F
 from barbar import Bar
 import sys
 import csv
@@ -16,7 +15,6 @@ import torchaudio
 from transformers import Wav2Vec2Model, Wav2Vec2Processor, Wav2Vec2ForSequenceClassification, Wav2Vec2FeatureExtractor
 from natsort import natsorted
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
-np.set_printoptions(threshold=sys.maxsize, linewidth=np.inf)
 
 
 def load_audio(file_path):
@@ -37,13 +35,15 @@ def get_video_number(file_path):
     return video_number
 
 
-def get_corresponding_data(video_number):
+def get_corresponding_data(video_number, emotions_task):
     audio_folder = "C:/Users/User/OneDrive/Documents/Research Project Audio Files/"
     audio_filename = "Video" + str(video_number) + ".mp3"
     audio_file = os.path.join(audio_folder, audio_filename)
 
-    labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
-    # labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_By_Classification_Attributes.npy"
+    if emotions_task is True:
+        labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+    else:
+        labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_By_Classification_Attributes.npy"
     labels_data = np.load(labels_file)
     label_clip = labels_data[video_number - 1]
     label_clip = label_clip.astype(float)
@@ -54,18 +54,6 @@ def get_corresponding_data(video_number):
     # Yes (1): Autism/Neurodivergent, No (0): Normal/Neurotypical
 
     return audio_file, label_clip, cond_label
-
-
-def make_whole_dataset():
-    whole_audio_file_list = []
-    whole_label_list = []
-    whole_condition_list = []
-    for i in range(1000):
-        audio_file, label_clip, cond_label = get_corresponding_data(i + 1)
-        whole_audio_file_list.append(audio_file)
-        whole_label_list.append(label_clip)
-        whole_condition_list.append(cond_label)
-    return whole_audio_file_list, whole_label_list, whole_condition_list
 
 
 class AudioDataset(Dataset):
@@ -102,20 +90,20 @@ def collate_fn(batch):
     return inputs, labels, cond_labels
 
 
-def get_split_data(phase_split, phase_file_list):
+def get_split_data(phase_split, phase_file_list, emotions_task):
     phase_split_audio_file_list = []
     phase_split_label_list = []
     phase_split_condition_list = []
     for file in phase_file_list:
         video_number = get_video_number(file)
-        audio_file, new_label_clip, cond_label = get_corresponding_data(video_number)
+        audio_file, new_label_clip, cond_label = get_corresponding_data(video_number, emotions_task)
         phase_split_audio_file_list.append(audio_file)
         phase_split_label_list.append(new_label_clip)
         phase_split_condition_list.append(cond_label)
     return phase_split_audio_file_list, phase_split_label_list, phase_split_condition_list
 
 
-def return_train_and_valid_data(train_validation_split, epoch):
+def return_train_and_valid_data(train_validation_split, epoch, emotions_task):
     remainder = epoch % 5
     split_size = int(len(train_validation_split) / 5)
     start_index = int(remainder * (split_size))
@@ -127,12 +115,13 @@ def return_train_and_valid_data(train_validation_split, epoch):
         if file not in val_dataset:
             train_dataset.append(file)
 
-    train_split_audio_file_list, train_split_label_list, train_split_condition_list = get_split_data("Train", train_dataset)
-    validation_split_audio_file_list, validation_split_label_list, validation_split_condition_list = get_split_data("Validation", val_dataset)
+    train_split_audio_file_list, train_split_label_list, train_split_condition_list = get_split_data("Train", train_dataset, emotions_task)
+    validation_split_audio_file_list, validation_split_label_list, validation_split_condition_list = get_split_data("Validation", val_dataset, emotions_task)
 
     return train_split_audio_file_list, train_split_label_list, train_split_condition_list, validation_split_audio_file_list, validation_split_label_list, validation_split_condition_list
 
 
+emotions_task = True  # Change to False if task is Emotional Dimensions
 # Load Pretrained Wav2Vec2
 pretrained_processor = Wav2Vec2FeatureExtractor.from_pretrained("facebook/wav2vec2-base-960h")
 model = Wav2Vec2Model.from_pretrained("superb/wav2vec2-base-superb-er")
@@ -148,8 +137,12 @@ optimizer = torch.optim.Adam(
 )
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-num_epochs = 10
-classifier = nn.Linear(768, 7).to(device)
+if emotions_task is True:
+    num_epochs = 20
+    classifier = nn.Linear(768, 7).to(device)
+else:
+    num_epochs = 10
+    classifier = nn.Linear(768, 3).to(device)
 model.to(device)
 
 
@@ -158,7 +151,7 @@ for epoch in range(num_epochs):
     print(f"Epoch: {epoch+1}")
 
     # Get Train and Validation Split Data
-    train_split_audio_file_list, train_split_label_list, train_split_condition_list, validation_split_audio_file_list, validation_split_label_list, validation_split_condition_list = return_train_and_valid_data(train_validation_split, epoch)
+    train_split_audio_file_list, train_split_label_list, train_split_condition_list, validation_split_audio_file_list, validation_split_label_list, validation_split_condition_list = return_train_and_valid_data(train_validation_split, epoch, emotions_task)
 
     # Create Train and Validation Datasets
     train_dataset = AudioDataset(train_split_audio_file_list, train_split_label_list, train_split_condition_list)
@@ -197,8 +190,8 @@ for epoch in range(num_epochs):
 
     train_pred_temp = torch.cat(train_pred_array, dim=0)
     train_label_temp = torch.cat(train_label_array, dim=0)
-    train_preds_array = train_pred_temp.view(-1).cpu().numpy()
-    train_labels_array = train_label_temp.view(-1).cpu().numpy()
+    train_preds_array = train_pred_temp.view(-1).detach().cpu().numpy()
+    train_labels_array = train_label_temp.view(-1).detach().cpu().numpy()
 
     train_accuracy = accuracy_score(train_labels_array, train_preds_array)
     train_loss = total_train_loss / len(train_loader)
@@ -229,8 +222,8 @@ for epoch in range(num_epochs):
 
         val_pred_temp = torch.cat(val_pred_array, dim=0)
         val_label_temp = torch.cat(val_label_array, dim=0)
-        val_preds_array = val_pred_temp.view(-1).cpu().numpy()
-        val_labels_array = val_label_temp.view(-1).cpu().numpy()
+        val_preds_array = val_pred_temp.view(-1).detach().cpu().numpy()
+        val_labels_array = val_label_temp.view(-1).detach().cpu().numpy()
 
         val_accuracy = accuracy_score(val_labels_array, val_preds_array)
         val_loss = total_val_loss / len(val_loader)
@@ -238,16 +231,27 @@ for epoch in range(num_epochs):
 
     # Save latest model
     if epoch == (num_epochs - 1):
-        torch.save({
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'classifier_state_dict': classifier.state_dict(),
-            'loss': val_loss
-        }, f"audio_weights_epoch{num_epochs}_emotions_mlc_wav2vec2.pth")
+        if emotions_task is True:
+            torch.save({
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'classifier_state_dict': classifier.state_dict(),
+                'loss': val_loss
+            }, f"audio_weights_epoch{num_epochs}_emotions_mlc_wav2vec2.pth")
+        else:
+            torch.save({
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'classifier_state_dict': classifier.state_dict(),
+                'loss': val_loss
+            }, f"audio_weights_epoch{num_epochs}_attributes_mlc_wav2vec2.pth")
 
 
 # Evaluation
-weights_file = f"audio_weights_epoch{num_epochs}_emotions_mlc_wav2vec2.pth"
+if emotions_task is True:
+    weights_file = f"audio_weights_epoch{num_epochs}_emotions_mlc_wav2vec2.pth"
+else:
+    weights_file = f"audio_weights_epoch{num_epochs}_attributes_mlc_wav2vec2.pth"
 checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
 classifier.load_state_dict(checkpoint['classifier_state_dict'])
@@ -256,7 +260,7 @@ classifier.load_state_dict(checkpoint['classifier_state_dict'])
 test_split_file = "C:/Users/User/PycharmProjects/Research Project/Test_Split.csv"
 test_split = np.loadtxt(test_split_file, delimiter=',', dtype=str)
 test_split = test_split.tolist()
-test_split_audio_file_list, test_split_label_list, test_split_condition_list = get_split_data("Test", test_split)
+test_split_audio_file_list, test_split_label_list, test_split_condition_list = get_split_data("Test", test_split, emotions_task)
 
 # Create Test Audio Dataset
 test_dataset = AudioDataset(test_split_audio_file_list, test_split_label_list, test_split_condition_list)
@@ -310,8 +314,8 @@ print(f"Audio Test Loss: {test_loss:.6f}")
 print(f"Audio Test F1_Micro: {test_f1_micro:.5f}")
 print(f"Audio Test F1_Macro: {test_f1_macro:.5f}")
 print(f"Audio Test F1_Weighted: {test_f1_weighted:.5f}")
-print(f"Audio Test F1 Per Emotion:")
-for l, f in zip(label_emotion_names, test_f1_per_label):
+print(f"Audio Test F1 Per Attribute:")
+for l, f in zip(label_attribute_names, test_f1_per_label):
     print(f"{l}: {f:.5f}")
 
 
