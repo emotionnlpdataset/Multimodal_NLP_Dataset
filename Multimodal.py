@@ -20,7 +20,6 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError("Must be True (emotional classification task) or False (emotional dimension classification task)")
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
