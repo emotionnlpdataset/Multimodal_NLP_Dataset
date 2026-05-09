@@ -45,6 +45,21 @@ def make_whole_dataset(emotions_task):
     return whole_vid_data_list, whole_label_list
 
 
+class VideoDataset(Dataset):
+    def __init__(self, video_data, labels):
+        self.video_data = video_data
+        self.labels = labels
+
+    def __len__(self):
+        return len(self.labels)
+
+    def __getitem__(self, idx):
+        video_clip_data = torch.from_numpy(self.video_data[idx])
+        video_clip_data = video_clip_data.permute(0, 3, 1, 2)
+        label = torch.tensor(self.labels[idx], dtype=torch.float32)
+        return video_clip_data, label
+
+
 emotions_task = True
 if emotions_task is True:
     num_epochs = 10
@@ -61,14 +76,14 @@ checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
 head.load_state_dict(checkpoint['head_state_dict'])
 
-whole_vid_data_list, whole_label_list, whole_condition_list = make_whole_dataset(emotions_task)
-whole_dataset = VideoDataset(whole_vid_data_list, whole_label_list, whole_condition_list)
+whole_vid_data_list, whole_label_list = make_whole_dataset(emotions_task)
+whole_dataset = VideoDataset(whole_vid_data_list, whole_label_list)
 whole_loader = DataLoader(whole_dataset, batch_size=4)
 
 model.eval()
 video_embedding = []
 with torch.no_grad():
-    for video_data, label, cond_label in Bar(whole_loader):
+    for video_data, label in Bar(whole_loader):
         video_data = video_data.to(device)
         label = label.to(device)
         outputs = model(video_data)
