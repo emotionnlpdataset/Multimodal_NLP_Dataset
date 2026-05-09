@@ -1,11 +1,12 @@
 import numpy as np
 import os
 import math
-from moviepy.editor import VideoFileClip, ImageSequenceClip
-import moviepy.editor as mp
+from moviepy import VideoFileClip, ImageSequenceClip, CompositeVideoClip
+import moviepy.video.fx as vfx
 import pandas as pd
 import h5py
 import sys
+from pathlib import Path
 
 
 def frame_extraction_clips(video_clip, num_samples):
@@ -19,6 +20,7 @@ def frame_extraction_clips(video_clip, num_samples):
 
     # Create new video from sampled frames
     frame_extracted_clip = ImageSequenceClip(frames, fps=2)
+    frame_extracted_clip = CompositeVideoClip([frame_extracted_clip])
 
     return frame_extracted_clip
 
@@ -29,7 +31,6 @@ def video_preprocess(video_file, output_folder):
     video_base_name = video_name.split(".")[0]
     video_clip = VideoFileClip(video_file)
     width = video_clip.w; height = video_clip.h
-    print(f"Resolution: {width}, {height}")
 
     if width > height:
         diff = width - height
@@ -41,10 +42,12 @@ def video_preprocess(video_file, output_folder):
     video_clip = frame_extraction_clips(video_clip, num_samples=16)
     print("Frame Extraction Completed")
 
-    padded_clip = video_clip.margin(top, bottom, left, right, color)
+    padded_clip = video_clip.with_effects([
+        vfx.Margin(top, bottom, left, right, color)
+    ])
     print("Padded Clip Completed")
     
-    resized_clip = padded_clip.resize(newsize=(224, 224))
+    resized_clip = padded_clip.resized(new_size=(224, 224))
     print("Resized Clip Completed")
 
     def video_to_hdf5(clip, hdf5_path):
