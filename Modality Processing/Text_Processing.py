@@ -1,12 +1,12 @@
-import torch
-from torch.utils.data import Dataset, DataLoader, Subset
 import numpy as np
 import pandas as pd
 import os
-from transformers import AutoModel, AutoTokenizer
+import torch
 import torch.nn as nn
-from barbar import Bar
+from torch.utils.data import Dataset, DataLoader, Subset
+from transformers import AutoModel, AutoTokenizer
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
+from barbar import Bar
 
 path_to_folder = "path/to/folder/"
 
