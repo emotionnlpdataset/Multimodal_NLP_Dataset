@@ -143,7 +143,6 @@ for epoch in range(num_epochs):
         pred = head(cls)
         loss = criterion(pred, label)
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
 
         prob = torch.sigmoid(pred)
@@ -247,14 +246,6 @@ with torch.no_grad():
         pred = (prob > 0.35).float()
         test_pred_array.append(pred.detach())
         test_label_array.append(label.detach())
-
-        for i in range(cond_label.shape[0]):
-            if cond_label[i].item() == 1:
-                neurodivergent_pred_array.append(pred[i].detach())
-                neurodivergent_label_array.append(label[i].detach())
-            elif cond_label[i].item() == 0:
-                neurotypical_pred_array.append(pred[i].detach())
-                neurotypical_label_array.append(label[i].detach())
 
         total_test_loss += loss.item()
 
