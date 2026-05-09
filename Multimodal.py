@@ -18,7 +18,6 @@ def get_video_number(file_path):
 
 
 def get_corresponding_data(video_number):
-    # index = video_number - 1
     audio_embedding = audio_embeddings[video_number-1]
     text_embedding = text_embeddings[video_number-1]
     video_embedding = video_embeddings[video_number-1]
@@ -112,13 +111,6 @@ labels_data = np.genfromtxt(labels_file, delimiter=',')
 new_labels_data = [arr[:7] for arr in labels_data]
 new_labels_data = np.array(new_labels_data)
 
-print(f"audio_embeddings shape: {audio_embeddings.shape}")
-print(f"text_embeddings shape: {text_embeddings.shape}")
-print(f"video_embeddings shape: {video_embeddings.shape}")
-print(f"labels_data shape: {new_labels_data.shape}")
-
-
-# index = video_number - 1
 train_validation_split_file = "C:/Users/User/PycharmProjects/Research Project/Train_Validation_Split.csv"
 train_validation_split = np.loadtxt(train_validation_split_file, delimiter=',', dtype=str)
 train_validation_split = train_validation_split.tolist()
@@ -126,7 +118,6 @@ train_validation_split_audio_embeddings_list, train_validation_split_text_embedd
 train_validation_dataset = MultimodalDataset(train_validation_split_audio_embeddings_list, train_validation_split_text_embeddings_list, train_validation_split_video_embeddings_list, train_validation_split_label_list, train_validation_split_condition_list)
 
 model = MultimodalModel()
-# criterion = nn.MSELoss()
 criterion = nn.BCEWithLogitsLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
 num_epochs = 30
@@ -267,65 +258,6 @@ print(f"Multimodal F1_Weighted: {f1_weighted:.5f}")
 print(f"Multimodal F1 Per Emotion:")
 for label_name, f in zip(label_emotion_names, f1_per_label):
     print(f"{label_name}: {f:.5f}")
-
-
-
-# Evaluate Neurotypical
-neurotypical_pred_temp = torch.cat(neurotypical_pred_array, dim=0)
-neurotypical_label_temp = torch.cat(neurotypical_label_array, dim=0)
-neurotypical_preds_array = neurotypical_pred_temp.view(-1).detach().cpu().numpy()
-neurotypical_labels_array = neurotypical_label_temp.view(-1).detach().cpu().numpy()
-
-accuracy_neurotypical = accuracy_score(neurotypical_labels_array, neurotypical_preds_array)
-f1_micro_neurotypical = f1_score(neurotypical_labels_array, neurotypical_preds_array, average='micro')
-f1_macro_neurotypical = f1_score(neurotypical_labels_array, neurotypical_preds_array, average='macro')
-f1_weighted_neurotypical = f1_score(neurotypical_labels_array, neurotypical_preds_array, average='weighted')
-neurotypical_labels = np.array([x.detach().cpu().numpy() for x in neurotypical_label_array]).squeeze(1)
-neurotypical_preds = np.array([x.detach().cpu().numpy() for x in neurotypical_pred_array]).squeeze(1)
-print(neurotypical_labels.shape)
-print(neurotypical_preds.shape)
-f1_per_label_neurotypical = f1_score(neurotypical_labels, neurotypical_preds, average=None)
-
-print(f"\nNeurotypical")
-print(f"Accuracy: {accuracy_neurotypical:.6f}")
-print(f"F1_Micro: {f1_micro_neurotypical:.5f}")
-print(f"F1_Macro: {f1_macro_neurotypical:.5f}")
-print(f"F1_Weighted: {f1_weighted_neurotypical:.5f}")
-print(f"F1 Per Emotion for Neurotypical:")
-for l, f in zip(label_emotion_names, f1_per_label_neurotypical):
-    print(f"{l}: {f:.5f}")
-
-
-
-# Evaluate Neurodivergent
-neurodivergent_pred_temp = torch.cat(neurodivergent_pred_array, dim=0)
-neurodivergent_label_temp = torch.cat(neurodivergent_label_array, dim=0)
-neurodivergent_preds_array = neurodivergent_pred_temp.view(-1).detach().cpu().numpy()
-neurodivergent_labels_array = neurodivergent_label_temp.view(-1).detach().cpu().numpy()
-
-accuracy_neurodivergent = accuracy_score(neurodivergent_labels_array, neurodivergent_preds_array)
-f1_micro_neurodivergent = f1_score(neurodivergent_labels_array, neurodivergent_preds_array, average='micro')
-f1_macro_neurodivergent = f1_score(neurodivergent_labels_array, neurodivergent_preds_array, average='macro')
-f1_weighted_neurodivergent = f1_score(neurodivergent_labels_array, neurodivergent_preds_array, average='weighted')
-neurodivergent_labels = np.array([x.detach().cpu().numpy() for x in neurodivergent_label_array]).squeeze(1)
-neurodivergent_preds = np.array([x.detach().cpu().numpy() for x in neurodivergent_pred_array]).squeeze(1)
-f1_per_label_neurodivergent = f1_score(neurodivergent_labels, neurodivergent_preds, average=None)
-
-print(f"\nNeurodivergent")
-print(f"Accuracy: {accuracy_neurodivergent:.6f}")
-print(f"F1_Micro: {f1_micro_neurodivergent:.5f}")
-print(f"F1_Macro: {f1_macro_neurodivergent:.5f}")
-print(f"F1_Weighted: {f1_weighted_neurodivergent:.5f}")
-print(f"F1 Per Emotion for Neurodivergent:")
-for l, f in zip(label_emotion_names, f1_per_label_neurodivergent):
-    print(f"{l}: {f:.5f}")
-
-
-
-
-
-
-
 
 
 
