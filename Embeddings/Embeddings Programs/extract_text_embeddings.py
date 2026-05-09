@@ -22,12 +22,7 @@ def get_corresponding_data(video_number, input_ids, attention_masks):
     label_clip = labels_data[video_number]
     label_clip = label_clip.astype(float)
 
-    condition_label_file = "C:/Users/User/PycharmProjects/Research Project/Condition_Labels.csv"
-    condition_label = pd.read_csv(condition_label_file)
-    cond_label = condition_label['Neurodivergent'].loc[video_number]
-    # Yes (1): Autism/Neurodivergent, No (0): Normal/Neurotypical
-
-    return input_id, attention_mask, label_clip, cond_label
+    return input_id, attention_mask, label_clip
 
 
 def make_whole_dataset(input_ids, attention_masks):
@@ -40,15 +35,14 @@ def make_whole_dataset(input_ids, attention_masks):
         whole_text_input_ids_list.append(text_input_id)
         whole_attention_masks_list.append(attention_mask)
         whole_label_list.append(new_label_clip)
-        whole_condition_list.append(condition_label)
-    return whole_text_input_ids_list, whole_attention_masks_list, whole_label_list, whole_condition_list
+    return whole_text_input_ids_list, whole_attention_masks_list, whole_label_list
 
 
 model_name = "distilbert-base-uncased"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 base_model = AutoModel.from_pretrained(model_name)
 
-class TextModel(nn.Module):
+class TextModelEmotions(nn.Module):
     def __init__(self):
         super().__init__()
         self.bert = base_model
@@ -68,13 +62,32 @@ class TextModel(nn.Module):
         return x
 
 
+class TextModelEmotionalDimensions(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.bert = base_model
+        self.fc = nn.Sequential(
+            nn.Linear(768, 256),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(256, 3)
+        )
+
+    def forward(self, inputs_ids, attention_mask, return_embedding=False):
+        outputs = self.bert(input_ids=inputs_ids, attention_mask=attention_mask)
+        x_embedding = outputs.last_hidden_state.mean(dim=1)
+        x = self.fc(x_embedding)
+        if return_embedding is True:
+            return x, x_embedding
+        return x
+
+
 class TextDataset(Dataset):
-    def __init__(self, text_input_ids, attention_masks, labels, cond_labels):
+    def __init__(self, text_input_ids, attention_masks, labels):
         super().__init__()
         self.text_input_ids = text_input_ids
         self.attention_masks = attention_masks
         self.labels = labels
-        self.cond_labels = cond_labels
 
     def __len__(self):
         return len(self.labels)
@@ -83,8 +96,7 @@ class TextDataset(Dataset):
         text_input = self.text_input_ids[idx]
         attention_mask = self.attention_masks[idx]
         label = torch.tensor(self.labels[idx], dtype=torch.float32)
-        cond_label = self.cond_labels[idx]
-        return text_input, attention_mask, label, cond_label
+        return text_input, attention_mask, label
 
 
 emotions_category = True
@@ -94,11 +106,24 @@ if emotions_category is True:
 else:
     num_epochs = 20
     weights_file = f"text_weights_epoch{num_epochs}_attributes_mlc.pth"
+
+if emotions_category is True:
+    model = TextModelEmotions()
+else:
+    model = TextModelEmotionalDimensions()
 checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
 
-whole_text_input_ids_list, whole_attention_masks_list, whole_label_list, whole_condition_list = make_whole_dataset(text_input_ids, attention_masks)
-whole_dataset = TextDataset(whole_text_input_ids_list, whole_attention_masks_list, whole_label_list, whole_condition_list)
+text_preprocessing_file = "C:/Users/User/Downloads/Text_Preprocessing.txt"
+with open(text_preprocessing_file, 'r') as f:
+    content = f.read()
+    text_preprocessing_data = ast.literal_eval(content)
+text_inputs = tokenizer(text_preprocessing_data, padding=True, truncation=True, return_tensors="pt")
+text_input_ids = text_inputs['input_ids']
+attention_masks = text_inputs['attention_mask']
+
+whole_text_input_ids_list, whole_attention_masks_list, whole_label_list = make_whole_dataset(text_input_ids, attention_masks)
+whole_dataset = TextDataset(whole_text_input_ids_list, whole_attention_masks_list, whole_label_list)
 whole_loader = DataLoader(whole_dataset, batch_size=16)
 
 text_embedding = []
