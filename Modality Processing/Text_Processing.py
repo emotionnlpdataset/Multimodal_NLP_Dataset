@@ -23,14 +23,14 @@ def get_corresponding_data(video_number, input_ids, attention_masks, emotions_ta
     attention_mask = attention_masks[video_number]
 
     if emotions_task is True:
-        labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+        labels_file = os.path.join(path_to_folder, "New_Labels_By_Classification_Emotions_Threshold15.npy")
     else:
-        labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_Classification_Attributes.npy"
+        labels_file = os.path.join(path_to_folder, "Revised_New_Labels_Classification_Attributes.npy")
     labels_data = np.load(labels_file)
     label_clip = labels_data[video_number]
     label_clip = label_clip.astype(float)
 
-    condition_label_file = "C:/Users/User/PycharmProjects/Research Project/Condition_Labels."
+    condition_label_file = os.path.join(path_to_folder, "Condition_Labels.csv")
     condition_label = pd.read_csv(condition_label_file)
     cond_label = condition_label['Neurodivergent'].loc[video_number]
     # Yes (1): Autism/Neurodivergent, No (0): Normal/Neurotypical
@@ -126,7 +126,7 @@ class TextDataset(Dataset):
 
 
 emotions_task = True  # Change if Emotional Dimensions Task
-text_preprocessing_file = "C:/Users/User/Downloads/Text_Preprocessing.txt"
+text_preprocessing_file = os.path.join(path_to_folder, "Text_Preprocessing.txt")
 with open(text_preprocessing_file, 'r') as f:
     content = f.read()
     text_preprocessing_data = ast.literal_eval(content)
@@ -134,7 +134,7 @@ text_inputs = tokenizer(text_preprocessing_data, padding=True, truncation=True, 
 text_input_ids = text_inputs['input_ids']
 attention_masks = text_inputs['attention_mask']
 
-train_validation_file = "C:/Users/User/Downloads/Train_Validation_Split.csv"
+train_validation_file = os.path.join(path_to_folder, "Train_Validation_Split.csv")
 train_validation_split = np.loadtxt(train_validation_file, delimiter=',', dtype=str)
 train_validation_split = train_validation_split.tolist()
 train_validation_split_text_input_ids_list, train_validation_split_attention_masks_list, train_validation_split_label_list, train_validation_split_condition_list = get_split_data("Train-Validation", train_validation_split, text_input_ids, attention_masks, emotions_task)
@@ -238,7 +238,7 @@ checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
 
 # Get Test Split
-test_split_file = "C:/Users/User/Downloads/Test_Split.csv"
+test_split_file = os.path.join(path_to_folder, "Test_Split.csv")
 test_split = np.loadtxt(test_split_file, delimiter=',', dtype=str)
 test_split = test_split.tolist()
 test_split_text_input_ids_list, test_split_attention_masks_list, test_split_label_list, test_split_condition_list = get_split_data("Test", test_split, text_input_ids, attention_masks, emotions_task)
