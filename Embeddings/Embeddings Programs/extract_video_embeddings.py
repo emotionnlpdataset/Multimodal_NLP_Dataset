@@ -53,6 +53,11 @@ if emotions_task is True:
 else:
     num_epochs = 10
     weights_file = f"video_weights_epoch{num_epochs}_attributes_mlc.pth"
+
+config = VivitConfig.from_pretrained("google/vivit-b-16x2-kinetics400")
+config.num_frames = 16
+model = VivitModel.from_pretrained("google/vivit-b-16x2-kinetics400", config=config, ignore_mismatched_sizes=True)
+
 checkpoint = torch.load(weights_file)
 model.load_state_dict(checkpoint['model_state_dict'])
 head.load_state_dict(checkpoint['head_state_dict'])
