@@ -8,7 +8,28 @@ from transformers import AutoModel, AutoTokenizer
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
 from barbar import Bar
 
+emotions_task = True
 path_to_folder = "path/to/folder/"
+
+def str2bool(v):
+    if v.lower() == "true":
+        return True
+    elif v.lower() == "false":
+        return False
+    else:
+        raise argparse.ArgumentTypeError("Must be True (emotional classification task) or False (emotional dimension classification task)")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--emotions_task", type=str2bool, required=True, help="True if running emotional classification task; False if running emotional dimensional classification task")
+    parser.add_argument("--path_to_folder", type=str, required=True, help="Path to working directory")
+
+    args = parser.parse_args()
+
+    emotions_task = args.emotions_task
+    path_to_folder = args.path_to_folder
+
 
 
 def get_video_number(file_path):
@@ -125,7 +146,6 @@ class TextDataset(Dataset):
         return text_input, attention_mask, label, cond_label
 
 
-emotions_task = True  # Change if Emotional Dimensions Task
 text_preprocessing_file = os.path.join(path_to_folder, "Text_Preprocessing.txt")
 with open(text_preprocessing_file, 'r') as f:
     content = f.read()
