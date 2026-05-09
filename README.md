@@ -22,7 +22,11 @@ There are two ways of running a program:
 1) Running through the command terminal
 In the cmd terminal, navigate to the directory that the program exists in.
 Example (if running Multimodal.py and performing the emotional dimensions classification task and your path_to_folder is path/to/folder/):
+
 python Multimodal.py --emotions_task False --path_to_folder path/to/folder/
+--emotions_task: True - Emotion Classification Task
+                 False - Emotional Dimension Classification Task
+--path_to_folder: working directory where the program is saved
 
 2) Running using a Python application (ie. Pycharm, etc.).
 If running using an application, make sure to comment out the main guard before running the program and change the path_to_folder global variable near the top to your working directory in which the program is saved in and the emotions_task to True if performing the emotional classification task or False if performing the emotional dimensions classification task.
