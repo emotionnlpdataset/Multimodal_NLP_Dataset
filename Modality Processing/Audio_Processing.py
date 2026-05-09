@@ -12,6 +12,8 @@ import torchaudio
 from transformers import Wav2Vec2Model, Wav2Vec2Processor, Wav2Vec2ForSequenceClassification, Wav2Vec2FeatureExtractor
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
 
+path_to_folder = "path/to/folder/"
+
 
 def load_audio(file_path):
     waveform, sample_rate = torchaudio.load(file_path)
