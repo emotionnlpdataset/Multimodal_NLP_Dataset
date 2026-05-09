@@ -120,12 +120,15 @@ class MultimodalModelEmotionalDimensions(nn.Module):
 
 
 emotions_task = True
-audio_embeddings_file = "C:/Users/User/PycharmProjects/Research Project/audio_embeddings_pretrained_emotions_mlc_wav2vec2.npy"
-text_embeddings_file = "C:/Users/User/PycharmProjects/Research Project/text_embeddings_pretrained_emotions_mlc.npy"
-video_embeddings_file = "C:/Users/User/PycharmProjects/Research Project/video_embeddings_pretrained_emotions_mlc.npy"
 if emotions_task is True:
+    audio_embeddings_file = os.path.join(path_to_folder, "audio_embeddings_pretrained_emotions_mlc_wav2vec2.npy")
+    text_embeddings_file = os.path.join(path_to_folder, "text_embeddings_pretrained_emotions_mlc.npy")
+    video_embeddings_file = os.path.join(path_to_folder, "video_embeddings_pretrained_emotions_mlc.npy")
     labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.csv"
 else:
+    audio_embeddings_file = os.path.join(path_to_folder, "audio_embeddings_pretrained_emotions_mlc_wav2vec2.npy")
+    text_embeddings_file = os.path.join(path_to_folder, "text_embeddings_pretrained_emotions_mlc.npy")
+    video_embeddings_file = os.path.join(path_to_folder, "video_embeddings_pretrained_emotions_mlc.npy")    
     labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_By_Classification_Attributes.csv"
 
 audio_embeddings = np.load(audio_embeddings_file)
@@ -133,7 +136,7 @@ text_embeddings = np.load(text_embeddings_file)
 video_embeddings = np.load(video_embeddings_file)
 labels_data = np.genfromtxt(labels_file, delimiter=',')
 
-train_validation_split_file = "C:/Users/User/PycharmProjects/Research Project/Train_Validation_Split.csv"
+train_validation_split_file = os.path.join(path_to_folder, "Train_Validation_Split.csv")
 train_validation_split = np.loadtxt(train_validation_split_file, delimiter=',', dtype=str)
 train_validation_split = train_validation_split.tolist()
 train_validation_split_audio_embeddings_list, train_validation_split_text_embeddings_list, train_validation_split_video_embeddings_list, train_validation_split_label_list, train_validation_split_condition_list = get_split_data("Train-Validation", train_validation_split)
@@ -233,7 +236,7 @@ else:
 checkpoint = torch.load(weights_file, weights_only=True)
 model.load_state_dict(checkpoint['model_state_dict'])
 
-test_split_file = "C:/Users/User/PycharmProjects/Research Project/Test_Split.csv"
+test_split_file = os.path.join(path_to_folder, "Test_Split.csv")
 test_split = np.loadtxt(test_split_file, delimiter=',', dtype=str)
 test_split = test_split.tolist()
 test_split_audio_embeddings_list, test_split_text_embeddings_list, test_split_video_embeddings_list, test_split_label_list, test_split_condition_list = get_split_data("Test", test_split)
