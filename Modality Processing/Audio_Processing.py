@@ -17,10 +17,6 @@ from transformers import Wav2Vec2Model, Wav2Vec2Processor, Wav2Vec2ForSequenceCl
 from natsort import natsorted
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
 np.set_printoptions(threshold=sys.maxsize, linewidth=np.inf)
-torch.backends.cuda.matmul.allow_tf32 = False
-torch.backends.cudnn.allow_tf32 = False
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
 
 
 def load_audio(file_path):
