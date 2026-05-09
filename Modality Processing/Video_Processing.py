@@ -86,7 +86,7 @@ class VideoDataset(Dataset):
         return video_clip_data, label, cond_label
 
 
-emotions_task = True
+emotions_task = True  # Change to False if task is Emotional Dimensions
 # Get Train-Validation Split
 train_validation_split_file = "C:/Users/User/Downloads/Train_Validation_Split.csv"
 train_validation_split = np.loadtxt(train_validation_split_file, delimiter=',', dtype=str)
