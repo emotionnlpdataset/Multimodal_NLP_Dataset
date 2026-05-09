@@ -37,7 +37,6 @@ def get_corresponding_data(video_number, emotions_task):
 def make_whole_dataset(emotions_task):
     whole_vid_data_list = []
     whole_label_list = []
-    whole_condition_list = []
     for i in range(1000):
         vid_data, label_clip = get_corresponding_data(i + 1, emotions_task)
         whole_vid_data_list.append(vid_data)
