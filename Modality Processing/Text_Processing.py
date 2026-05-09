@@ -6,10 +6,7 @@ import os
 from transformers import AutoModel, AutoTokenizer
 import torch.nn as nn
 import csv
-import ast
-import h5py
 from barbar import Bar
-from natsort import natsorted
 from itertools import chain
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
 
