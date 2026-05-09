@@ -30,9 +30,8 @@ def make_whole_dataset(input_ids, attention_masks, emotions_task):
     whole_text_input_ids_list = []
     whole_attention_masks_list = []
     whole_label_list = []
-    whole_condition_list = []
     for i in range(1000):
-        text_input_id, attention_mask, new_label_clip, condition_label = get_corresponding_data(i, input_ids, attention_masks, emotions_task)
+        text_input_id, attention_mask, new_label_clip = get_corresponding_data(i, input_ids, attention_masks, emotions_task)
         whole_text_input_ids_list.append(text_input_id)
         whole_attention_masks_list.append(attention_mask)
         whole_label_list.append(new_label_clip)
@@ -127,7 +126,7 @@ whole_loader = DataLoader(whole_dataset, batch_size=16)
 
 text_embedding = []
 with torch.no_grad():
-    for text_input_id, attention_mask, label, cond_label in Bar(whole_loader):
+    for text_input_id, attention_mask, label in Bar(whole_loader):
         output, temp_text_embedding = model(text_input_id, attention_mask, return_embedding=True)
         text_embedding.append(temp_text_embedding.tolist())
 
