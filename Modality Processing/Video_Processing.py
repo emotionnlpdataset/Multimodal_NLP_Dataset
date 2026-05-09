@@ -107,18 +107,16 @@ criterion = nn.BCEWithLogitsLoss()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 if emotions_task is True:
+    num_epochs = 10
     head = torch.nn.Linear(768, 7)
 else:
+    num_epochs = 20
     head = torch.nn.Linear(768, 3)
 head = head.to(device)
 optimizer = torch.optim.Adam(
     list(model.parameters()) + list(head.parameters()),
     lr=1e-4
 )
-if emotions_task is True: 
-    num_epochs = 10
-else:
-    num_epochs = 20
 
 
 for epoch in range(num_epochs):
@@ -196,12 +194,20 @@ for epoch in range(num_epochs):
         print(f"Video Epoch {epoch+1}: Val Accuracy: {val_accuracy:.5f}, Validation Loss: {val_loss:.5f}")
 
     if epoch == (num_epochs - 1):
-        torch.save({
-            'model_state_dict': model.state_dict(),
-            'head_state_dict': head.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'loss': val_loss
-        }, f"video_weights_epoch{num_epochs}_emotions_mlc.pth")
+        if emotions_task is True:
+            torch.save({
+                'model_state_dict': model.state_dict(),
+                'head_state_dict': head.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': val_loss
+            }, f"video_weights_epoch{num_epochs}_emotions_mlc.pth")
+        else:
+            torch.save({
+                'model_state_dict': model.state_dict(),
+                'head_state_dict': head.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': val_loss
+            }, f"video_weights_epoch{num_epochs}_attibutes_mlc.pth")
 
 
 # Load Model for Evaluation
@@ -274,9 +280,14 @@ print(f"Video Test Loss: {test_loss:.6f}")
 print(f"Video Test F1_Micro: {test_f1_micro:.5f}")
 print(f"Video Test F1_Macro: {test_f1_macro:.5f}")
 print(f"Video Test F1_Weighted: {test_f1_weighted:.5f}")
-print(f"Video Test F1 Per Emotion:")
-for l, f in zip(label_emotion_names, test_f1_per_label):
-    print(f"{l}: {f:.5f}")
+if emotions_task is True:
+    print(f"Video Test F1 Per Emotion:")
+    for l, f in zip(label_emotion_names, test_f1_per_label):
+        print(f"{l}: {f:.5f}")
+else:
+    print(f"Video Test F1 Per Attribute:")
+    for l, f in zip(label_attribute_names, test_f1_per_label):
+        print(f"{l}: {f:.5f}") 
 
 
 
