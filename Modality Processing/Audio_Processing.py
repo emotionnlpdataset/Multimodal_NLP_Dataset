@@ -36,8 +36,8 @@ def get_video_number(file_path):
 
 
 def get_corresponding_data(video_number, emotions_task):
-    audio_folder = "C:/Users/User/OneDrive/Documents/Research Project Audio Files/"
-    audio_filename = "Video" + str(video_number) + ".mp3"
+    audio_folder = "C:/Users/User/OneDrive/Documents/Research Project Cleaned Audio Files/"
+    audio_filename = "cleanedVideo" + str(video_number) + ".mp3"
     audio_file = os.path.join(audio_folder, audio_filename)
 
     if emotions_task is True:
