@@ -7,12 +7,12 @@ from torch.utils.data import Dataset, DataLoader, Subset
 import torch.nn as nn
 from barbar import Bar
 import sys
-import csv
 from itertools import chain
 import torchvision
 from transformers import VivitImageProcessor, VivitModel, VivitConfig
-from natsort import natsorted
 from sklearn.metrics import f1_score, classification_report, accuracy_score, confusion_matrix
+
+path_to_folder = "path/to/folder/"
 
 
 def get_video_number(file_path):
