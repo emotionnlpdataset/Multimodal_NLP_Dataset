@@ -6,7 +6,6 @@ import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from barbar import Bar
 import sys
-import csv
 from itertools import chain
 import torchaudio
 from transformers import Wav2Vec2Model, Wav2Vec2Processor, Wav2Vec2ForSequenceClassification, Wav2Vec2FeatureExtractor
