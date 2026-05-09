@@ -79,7 +79,7 @@ class MultimodalDataset(Dataset):
         return combined_embedding, label, cond_label
 
 
-class MultimodalModel(nn.Module):
+class MultimodalModelEmotions(nn.Module):
     def __init__(self):
         super().__init__()
         self.model = nn.Sequential(
@@ -98,18 +98,38 @@ class MultimodalModel(nn.Module):
         return x
 
 
-# emotions = True
+class MultimodalModelEmotionalDimensions(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.model = nn.Sequential(
+            nn.Linear(2304, 512),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+
+            nn.Linear(512, 128),
+            nn.ReLU(),
+
+            nn.Linear(128, 3)
+        )
+
+    def forward(self, x):
+        x = self.model(x)
+        return x
+
+
+emotions_task = True
 audio_embeddings_file = "C:/Users/User/PycharmProjects/Research Project/audio_embeddings_pretrained_emotions_mlc_wav2vec2.npy"
 text_embeddings_file = "C:/Users/User/PycharmProjects/Research Project/text_embeddings_pretrained_emotions_mlc.npy"
 video_embeddings_file = "C:/Users/User/PycharmProjects/Research Project/video_embeddings_pretrained_emotions_mlc.npy"
-labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.csv"
+if emotions_task is True:
+    labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.csv"
+else:
+    labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_By_Classification_Attributes.csv"
 
 audio_embeddings = np.load(audio_embeddings_file)
 text_embeddings = np.load(text_embeddings_file)
 video_embeddings = np.load(video_embeddings_file)
 labels_data = np.genfromtxt(labels_file, delimiter=',')
-new_labels_data = [arr[:7] for arr in labels_data]
-new_labels_data = np.array(new_labels_data)
 
 train_validation_split_file = "C:/Users/User/PycharmProjects/Research Project/Train_Validation_Split.csv"
 train_validation_split = np.loadtxt(train_validation_split_file, delimiter=',', dtype=str)
@@ -117,7 +137,10 @@ train_validation_split = train_validation_split.tolist()
 train_validation_split_audio_embeddings_list, train_validation_split_text_embeddings_list, train_validation_split_video_embeddings_list, train_validation_split_label_list, train_validation_split_condition_list = get_split_data("Train-Validation", train_validation_split)
 train_validation_dataset = MultimodalDataset(train_validation_split_audio_embeddings_list, train_validation_split_text_embeddings_list, train_validation_split_video_embeddings_list, train_validation_split_label_list, train_validation_split_condition_list)
 
-model = MultimodalModel()
+if emotions_task is True:
+    model = MultimodalModel()
+else:
+    model = MultimodalModelEmotionalDimensions()
 criterion = nn.BCEWithLogitsLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
 num_epochs = 30
@@ -186,15 +209,25 @@ for epoch in range(num_epochs):
     print(f"Epoch {epoch+1}: Validation Accuracy: {val_accuracy:.5f}, Validation Loss: {val_loss:.6f}")
 
     if epoch == (num_epochs - 1):
-        torch.save({
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'loss': val_loss
-        }, f"multimodal_model_weights_emotions_mlc.pth")
+        if emotions_task is True:
+            torch.save({
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': val_loss
+            }, f"multimodal_model_weights_emotions_mlc.pth")
+        else:
+            torch.save({
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': val_loss
+            }, f"multimodal_model_weights_attributes_mlc.pth")
 
 
 # Load Model
-weights_file = f"multimodal_model_weights_emotions_mlc.pth"
+if emotions_task is True:
+    weights_file = f"multimodal_model_weights_emotions_mlc.pth"
+else:
+    weights_file = f"multimodal_model_weights_attributes_mlc.pth"
 checkpoint = torch.load(weights_file, weights_only=True)
 model.load_state_dict(checkpoint['model_state_dict'])
 
@@ -209,10 +242,6 @@ model.eval()
 total_test_loss = 0.0
 test_pred_array = []
 test_label_array = []
-neurotypical_pred_array = []
-neurotypical_label_array = []
-neurodivergent_pred_array = []
-neurodivergent_label_array = []
 with torch.no_grad():
     for combined_embedding, label, cond_label in Bar(test_loader):
         output = model(combined_embedding)
@@ -222,14 +251,6 @@ with torch.no_grad():
         pred = (prob > 0.35).float()
         test_pred_array.append(pred.detach())
         test_label_array.append(label.detach())
-
-        for i in range(cond_label.shape[0]):
-            if cond_label[i] == 1:
-                neurodivergent_pred_array.append(pred[i].detach())
-                neurodivergent_label_array.append(label[i].detach())
-            elif cond_label[i] == 0:
-                neurotypical_pred_array.append(pred[i].detach())
-                neurotypical_label_array.append(label[i].detach())
 
         total_test_loss += loss.item()
 
@@ -255,9 +276,14 @@ print(f"Multimodal Loss: {test_loss:.6f}")
 print(f"Multimodal F1_Micro: {f1_micro:.5f}")
 print(f"Multimodal F1_Macro: {f1_macro:.5f}")
 print(f"Multimodal F1_Weighted: {f1_weighted:.5f}")
-print(f"Multimodal F1 Per Emotion:")
-for label_name, f in zip(label_emotion_names, f1_per_label):
-    print(f"{label_name}: {f:.5f}")
+if emotions_task is True:
+    print(f"Multimodal F1 Per Emotion:")
+    for label_name, f in zip(label_emotion_names, f1_per_label):
+        print(f"{label_name}: {f:.5f}")
+else:
+    print(f"Multimodal F1 Per Attribute:")
+    for label_name, f in zip(label_attribute_names, f1_per_label):
+        print(f"{label_name}: {f:.5f}")
 
 
 
