@@ -45,18 +45,6 @@ def get_corresponding_data(video_number):
     return video_data, label_clip, cond_label
 
 
-def make_whole_dataset():
-    whole_vid_data_list = []
-    whole_label_list = []
-    whole_condition_list = []
-    for i in range(1000):
-        vid_data, label_clip, cond_label = get_corresponding_data(i + 1)
-        whole_vid_data_list.append(vid_data)
-        whole_label_list.append(label_clip)
-        whole_condition_list.append(cond_label)
-    return whole_vid_data_list, whole_label_list, whole_condition_list
-
-
 def get_split_data(phase_split, phase_file_list):
     phase_split_vid_data_list = []
     phase_split_label_list = []
