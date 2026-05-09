@@ -17,6 +17,8 @@ def get_corresponding_data(video_number, input_ids, attention_masks, emotions_ta
 
     if emotions_task is True:
         labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+    else:
+        labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_By_Classification_Attributes.npy"
     labels_data = np.load(labels_file)
     label_clip = labels_data[video_number]
     label_clip = label_clip.astype(float)
