@@ -25,7 +25,7 @@ def get_corresponding_data(video_number):
     video_embedding = video_embeddings[video_number-1]
     new_label = new_labels_data[video_number-1]
 
-    condition_label_file = "C:/Users/User/PycharmProjects/Research Project/Condition_Labels.csv"
+    condition_label_file = os.path.join(path_to_folder, "Condition_Labels.csv")
     condition_label = pd.read_csv(condition_label_file)
     cond_label = condition_label['Neurodivergent'].loc[video_number-1]
     # Yes (1): Autism/Neurodivergent, No (0): Normal/Neurotypical
@@ -124,12 +124,12 @@ if emotions_task is True:
     audio_embeddings_file = os.path.join(path_to_folder, "audio_embeddings_pretrained_emotions_mlc_wav2vec2.npy")
     text_embeddings_file = os.path.join(path_to_folder, "text_embeddings_pretrained_emotions_mlc.npy")
     video_embeddings_file = os.path.join(path_to_folder, "video_embeddings_pretrained_emotions_mlc.npy")
-    labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.csv"
+    labels_file = os.path.join(path_to_folder, "New_Labels_By_Classification_Emotions_Threshold15.csv")
 else:
     audio_embeddings_file = os.path.join(path_to_folder, "audio_embeddings_pretrained_attributes_mlc_wav2vec2.npy")
     text_embeddings_file = os.path.join(path_to_folder, "text_embeddings_pretrained_attributes_mlc.npy")
     video_embeddings_file = os.path.join(path_to_folder, "video_embeddings_pretrained_attributes_mlc.npy")    
-    labels_file = "C:/Users/User/PycharmProjects/Research Project/Revised_New_Labels_By_Classification_Attributes.csv"
+    labels_file = os.path.join(path_to_folder, "Revised_New_Labels_By_Classification_Attributes.csv")
 
 audio_embeddings = np.load(audio_embeddings_file)
 text_embeddings = np.load(text_embeddings_file)
