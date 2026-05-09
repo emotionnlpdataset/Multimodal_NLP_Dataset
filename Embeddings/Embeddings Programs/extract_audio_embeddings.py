@@ -12,12 +12,13 @@ from natsort import natsorted
 from transformers import Wav2Vec2Model, Wav2Vec2Processor, Wav2Vec2ForSequenceClassification, Wav2Vec2FeatureExtractor
 
 
-def get_corresponding_data(video_number):
+def get_corresponding_data(video_number, emotions_task):
     audio_folder = "C:/Users/User/OneDrive/Documents/Research Project Audio Files/"
     audio_filename = "Video" + str(video_number) + ".mp3"
     audio_file = os.path.join(audio_folder, audio_filename)
 
-    labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
+    if emotions_task is True:
+        labels_file = "C:/Users/User/PycharmProjects/Research Project/New_Labels_By_Classification_Emotions_Threshold15.npy"
     labels_data = np.load(labels_file)
     label_clip = labels_data[video_number - 1]
     label_clip = label_clip.astype(float)
@@ -25,12 +26,12 @@ def get_corresponding_data(video_number):
     return audio_file, label_clip
 
 
-def make_whole_dataset():
+def make_whole_dataset(emotions_task):
     whole_audio_file_list = []
     whole_label_list = []
     whole_condition_list = []
     for i in range(1000):
-        audio_file, label_clip = get_corresponding_data(i + 1)
+        audio_file, label_clip = get_corresponding_data(i + 1, emotions_task)
         whole_audio_file_list.append(audio_file)
         whole_label_list.append(label_clip)
     return whole_audio_file_list, whole_label_list
