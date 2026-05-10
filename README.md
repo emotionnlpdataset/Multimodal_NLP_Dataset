@@ -26,8 +26,8 @@ Example (if running Multimodal.py and performing the emotional dimensions classi
 ```
 python Multimodal.py --emotions_task False --path_to_folder path/to/folder/
 
---emotions_task: True  - Emotion Classification Task
-                 False - Emotional Dimension Classification Task
+--emotions_task:  True  - Emotion Classification Task
+                  False - Emotional Dimension Classification Task
 
 --path_to_folder: working directory where the program is saved
 ```
