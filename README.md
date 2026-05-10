@@ -4,14 +4,14 @@ The publically available dataset featuring video clips can be found at: https://
 
 There are four options to choose from for running a program: 
 1) Audio_Processing.py
-Filtered Audio Clips can be found at:
+- Filtered Audio Clips can be found at:
 https://huggingface.co/datasets/multimodalemotionnlp/cleanedAudioFiles
 
 2) Text_Processing.py
-Text Preprocessing file can be found in this GitHub repository (Miscellaneous/Text_Preprocessing.txt)
+- Text Preprocessing file can be found in this GitHub repository (Miscellaneous/Text_Preprocessing.txt)
 
 3) Video_Processing.py
-HDF5 Files can be found at: 
+- HDF5 Files can be found at: 
 https://huggingface.co/datasets/multimodalemotionnlp/ResearchProjectHDF5Files
 
 4) Multimodal.py
