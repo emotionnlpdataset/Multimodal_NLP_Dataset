@@ -28,13 +28,13 @@ The multilabel classification approach was utilized as it was better suited for 
 
 ## Installation
 1) Clone the repository
-```
+```python
 git clone <repository-url>
 cd Multimodal_NLP
 ```
 
 2) Create a virtual environment
-```
+```python
 python -m venv venv
 source venv/bin/activate  # On Windows: venv/Scripts/activate
 ```
