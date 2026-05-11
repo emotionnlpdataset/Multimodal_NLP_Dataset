@@ -1,6 +1,6 @@
 # Multimodal Neurodiverse NLP Dataset for Emotion Recognition
 
-Our goal is to make a novel neurodiverse dataset featuring neurodivergent and neurotypical individuals, for the ultimate purpose of training and deploying AI models that can be used in mobile or web-based applications to assist neurodivergent individuals in daily tasks. Currently, our dataset consists of 1000 video clips. 
+Our goal is to make a novel neurodiverse dataset featuring neurodivergent and neurotypical individuals that can be used to train AI models to recognize emotion and sentiment across neurodiverse populations. 
 
 This depository contains:
 - link to a multimodal neurodiverse dataset
