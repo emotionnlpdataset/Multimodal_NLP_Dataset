@@ -56,6 +56,7 @@ https://huggingface.co/datasets/multimodalemotionnlp/ResearchProjectHDF5Files
 
 ### 4) Multimodal Fusion (Multimodal.py)
 <br>
+___________________________________________________________________________________________________________________________
 There are two ways of running a program:<br>
 1. Running through the command terminal<br>
 In the cmd terminal, navigate to the directory that the program exists in. Example (if running Multimodal.py and performing the emotional dimensions classification task and your path_to_folder is path/to/folder/):
