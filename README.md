@@ -27,19 +27,19 @@ The multilabel classification approach was utilized as it was better suited for 
 4) Multimodal Fusion
 
 ## Installation
-1) Clone the repository
+1. Clone the repository
 ```python
 git clone <repository-url>
 cd Multimodal_NLP
 ```
 
-2) Create a virtual environment
+2. Create a virtual environment
 ```python
 python -m venv venv
 source venv/bin/activate  # On Windows: venv/Scripts/activate
 ```
 
-3) Install necessary dependencies (as seen in the requirements.txt file)
+3. Install necessary dependencies (as seen in the requirements.txt file)
 ```python
 pip install -r requirements.txt
 ```
