@@ -65,7 +65,7 @@ python Multimodal.py --emotions_task False --path_to_folder path/to/folder/
 
 2. Running using a Python application (ie. Pycharm, etc.).<br>
 If running using an application, make sure to comment out the main guard before running the program and change the path_to_folder global variable near the top of the program to your working directory in which the program is saved in and the emotions_task global variable to True if performing the Emotion Classification Task or False if performing the Emotional Dimension Classification Task.
-<br>
+
 Models used for this research project can be found at:
 https://huggingface.co/multimodalemotionnlp/Neurodiverse_NLP_Models
 
