@@ -5,14 +5,14 @@ Our goal is to make a novel neurodiverse dataset featuring neurodivergent and ne
 The publically available dataset featuring video clips can be found at: https://huggingface.co/datasets/multimodalemotionnlp/Neurodiverse_Multimodal_Dataset
 
 ## Details Regarding the Dataset
-# Data Collection
+### Data Collection
 Video clips were collected from publically-available sources such as YouTube and TikTok.
 
-# Data Annotation
-Video clips were annotated using crowd-sourced rating. Raters used a web-interface
+### Data Annotation
+Video clips were annotated using crowd-sourced rating. Raters used a web-interface application, where emotions were rated using sliding scales from 0 to 100 while emotional dimensions were rated using sliding scales ranging from -3 to 3. 
 
-# Data Processing
-Emotions were considered as present if the aggregate average corresponding rating was over 15. Emotional dimensions were considered as positive if the average corresponding rating was over 1. 
+### Data Processing
+The multilabel classification approach was utilized as it was better suited for mitigating subjectivity. Emotions were considered as present if the aggregate average corresponding rating was over 15. Emotional dimensions were considered as positive if the average corresponding rating was over 1. 
 
 ## Model Architectures
 1) Wav2Vec2
