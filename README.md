@@ -25,7 +25,7 @@ The multilabel classification approach was utilized as it was better suited for 
 2) BERT Model
 3) Video Vision Transformer (ViViT)
 4) Multimodal Fusion <br>
-![Pipeline](Images/Multimodal Model Architecture.png)
+![Pipeline](images/multimodal_model_architecture.png)
 
 ## Installation
 1. Clone the repository
