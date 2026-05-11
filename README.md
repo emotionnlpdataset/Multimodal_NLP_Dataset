@@ -2,13 +2,16 @@
 
 Our goal is to make a novel neurodiverse dataset featuring neurodivergent and neurotypical individuals that can be used to train AI models to recognize emotion and sentiment across neurodiverse populations. 
 
-This depository contains:
+This repository contains:
 - link to a multimodal neurodiverse dataset
 - preprocessing pipelines
 - pretrained and fine-tuned models and transformers
 - a multimodal fusion model designed for affective computing research
 
-The publically available dataset featuring video clips can be found at: https://huggingface.co/datasets/multimodalemotionnlp/Neurodiverse_Multimodal_Dataset
+The publicly available dataset featuring video clips can be found at: https://huggingface.co/datasets/multimodalemotionnlp/Neurodiverse_Multimodal_Dataset
+
+Models used for this research project can be found at:
+https://huggingface.co/multimodalemotionnlp/Neurodiverse_NLP_Models
 
 ## Installation
 1. Clone the repository
@@ -49,8 +52,7 @@ https://huggingface.co/datasets/multimodalemotionnlp/ResearchProjectHDF5Files
 <br>
 _________________________________________________________________________________________________________________________________________
 
-There are two ways of running a program:<br>
-1. Running through the command terminal<br>
+Running through the command terminal: <br>
 In the command terminal, navigate to the directory that the program exists in. Example (if running Multimodal.py and performing the emotional dimensions classification task and your path_to_folder is path/to/folder/):
 
 ```
@@ -62,15 +64,23 @@ python Multimodal.py --emotions_task False --path_to_folder path/to/folder/
 --path_to_folder: working directory where the program is saved
 ```
 
-2. Running using a Python application (ie. Pycharm, etc.).<br>
-If running using an application, make sure to comment out the main guard before running the program and change the path_to_folder global variable near the top of the program to your working directory in which the program is saved in and the emotions_task global variable to True if performing the Emotion Classification Task or False if performing the Emotional Dimension Classification Task.
+## Running from the Command Terminal
 
-Models used for this research project can be found at:
-https://huggingface.co/multimodalemotionnlp/Neurodiverse_NLP_Models
+Navigate to the directory containing the program before running the script.
 
-Label Files can be found in this GitHub repository: 
-- For the emotional classification task: Labels_File/New_Labels_By_Classification_Emotions_Threshold15.npy
-- For the emotional dimensions classification task: Labels_File/Revised_New_Labels_By_Classification_Attributes.npy
+Example command (running `Multimodal.py` for the emotional dimensions classification task):
+
+```bash
+python Multimodal.py --emotions_task False --path_to_folder path/to/folder/
+```
+
+### Command-Line Arguments
+
+| Argument | Description |
+|---|---|
+| `--emotions_task True` | Runs the emotion classification task |
+| `--emotions_task False` | Runs the emotional dimension classification task |
+| `--path_to_folder` | Path to the working directory containing the program files |
 
 ## Details Regarding the Dataset
 ### Data Collection
@@ -89,12 +99,6 @@ The multilabel classification approach was utilized as it was better suited for 
 4) Multimodal Fusion: combines information from all three modalities (audio, textual and visual) to produce a single set of predictions<br><br>
 Multimodal Fusion Pipeline: <br><br>
 ![Pipeline](images/multimodal_model_architecture.png)
-
-## Citation
-If using this repository, here is the citation:
-```
-NEURODIVERSE_MULTIMODAL_NLP_DATASET
-```
 
 ## License
 This repository is licensed under the Apache License, Version 2.0<br>
