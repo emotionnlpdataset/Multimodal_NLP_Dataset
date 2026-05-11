@@ -97,8 +97,8 @@ NEURODIVERSE_MULTIMODAL_NLP_DATASET
 ```
 
 ## License
-This dataset is released under the Creative Commons License (CC-BY-4.0)<br>
-https://creativecommons.org/licenses/by/4.0/
+This repository is released under the Apache License, Version 2.0<br>
+
 
 
 
