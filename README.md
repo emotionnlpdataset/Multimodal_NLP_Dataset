@@ -18,7 +18,7 @@ Video clips were collected from publically-available sources such as YouTube and
 Video clips were annotated using crowd-sourced rating. Raters used a web-interface application, where emotions (anger, disgust, fear, happiness, sadness, surprise and neutral) were rated using sliding scales from 0 to 100 while emotional dimensions (valence, arousal and dominance) were rated using sliding scales ranging from -3 to 3. 
 
 ### Data Processing
-The multilabel classification approach was utilized as it was better suited for mitigating subjectivity. Emotions were considered as present if the aggregate average corresponding rating was over 15. Emotional dimensions were considered as positive if the average corresponding rating was over 1. 
+The multilabel classification approach was utilized as it was better suited for mitigating subjectivity. Emotions were considered as present if the average corresponding rating was over 15. Emotional dimensions were considered as positive if the average corresponding rating was over 1. 
 
 ## Model Architectures
 1) Wav2Vec2
