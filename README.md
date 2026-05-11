@@ -50,19 +50,6 @@ https://huggingface.co/datasets/multimodalemotionnlp/ResearchProjectHDF5Files
 ### 4) Multimodal Fusion (Multimodal.py)
 > If you plan to run Multimodal.py, make sure to run all three modalities (Audio, Text and Video) first. Then make sure to run the embeddings files (found in this GitHub repository at Embeddings/Embeddings Programs) to store the embeddings from each modality before finally running Multimodal.py. 
 <br>
-_________________________________________________________________________________________________________________________________________
-
-Running through the command terminal: <br>
-In the command terminal, navigate to the directory that the program exists in. Example (if running Multimodal.py and performing the emotional dimensions classification task and your path_to_folder is path/to/folder/):
-
-```
-python Multimodal.py --emotions_task False --path_to_folder path/to/folder/
-
---emotions_task:  True  - Emotion Classification Task
-                  False - Emotional Dimension Classification Task
-
---path_to_folder: working directory where the program is saved
-```
 
 ## Running from the Command Terminal
 
