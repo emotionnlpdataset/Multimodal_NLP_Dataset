@@ -4,6 +4,15 @@ Our goal is to make a novel neurodiverse dataset featuring neurodivergent and ne
 
 The publically available dataset featuring video clips can be found at: https://huggingface.co/datasets/multimodalemotionnlp/Neurodiverse_Multimodal_Dataset
 
+## Details Regarding the Dataset
+
+
+## Model Architectures
+1) Wav2Vec2
+2) BERT Model
+3) Video Vision Transformer (ViViT)
+4) Multimodal Fusion
+
 ## Installation
 1) Clone the repository
 ```
