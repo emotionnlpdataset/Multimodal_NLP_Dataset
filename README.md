@@ -67,5 +67,17 @@ Label Files can be found in this GitHub repository:
 - For the emotional classification task: Labels_File/New_Labels_By_Classification_Emotions_Threshold15.npy
 - For the emotional dimensions classification task: Labels_File/Revised_New_Labels_By_Classification_Attributes.npy
 
+## Citation
+If using this repository, here is the citation:
+```
+NEURODIVERSE_MULTIMODAL_NLP_DATASET
+```
+
+## License
+This dataset is released under the Creative Commons License (CC-BY-4.0)
+https://creativecommons.org/licenses/by/4.0/
+
+
+
 
 
