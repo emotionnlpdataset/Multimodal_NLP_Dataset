@@ -10,24 +10,6 @@ This depository contains:
 
 The publically available dataset featuring video clips can be found at: https://huggingface.co/datasets/multimodalemotionnlp/Neurodiverse_Multimodal_Dataset
 
-## Details Regarding the Dataset
-### Data Collection
-Video clips were collected from publically-available sources such as YouTube and TikTok.
-
-### Data Annotation
-Video clips were annotated using crowd-sourced rating. Raters were assigned to rate clips using a web-interface application, where emotions (anger, disgust, fear, happiness, sadness, surprise and neutral) were rated using sliding scales from 0 to 100 while emotional dimensions (valence, arousal and dominance) were rated using sliding scales ranging from -3 to 3. 
-
-### Data Processing
-The multilabel classification approach was utilized as it was better suited for mitigating subjectivity. Emotions were considered as present if the average corresponding rating was over 15. Emotional dimensions were considered as positive if the average corresponding rating was over 1. 
-
-## Model Architectures
-1) Wav2Vec2: self-supervised model that operates on raw waveforms and captures localized acoustic patterns and contextualized high-level speech representations
-2) BERT Model: encoder-only transformer that is trained using unsupervised learning; picks up contextual representations based on surrounding content
-3) Video Vision Transformer (ViViT): utilizes spatial and temporal information to analyze video data
-4) Multimodal Fusion: combines information from all three modalities (audio, textual and visual) to produce a single set of predictions<br><br>
-Multimodal Fusion Pipeline: <br><br>
-![Pipeline](images/multimodal_model_architecture.png)
-
 ## Installation
 1. Clone the repository
 ```python
@@ -91,6 +73,24 @@ https://huggingface.co/multimodalemotionnlp/Neurodiverse_NLP_Models
 Label Files can be found in this GitHub repository: 
 - For the emotional classification task: Labels_File/New_Labels_By_Classification_Emotions_Threshold15.npy
 - For the emotional dimensions classification task: Labels_File/Revised_New_Labels_By_Classification_Attributes.npy
+
+## Details Regarding the Dataset
+### Data Collection
+Video clips were collected from publically-available sources such as YouTube and TikTok.
+
+### Data Annotation
+Video clips were annotated using crowd-sourced rating. Raters were assigned to rate clips using a web-interface application, where emotions (anger, disgust, fear, happiness, sadness, surprise and neutral) were rated using sliding scales from 0 to 100 while emotional dimensions (valence, arousal and dominance) were rated using sliding scales ranging from -3 to 3. 
+
+### Data Processing
+The multilabel classification approach was utilized as it was better suited for mitigating subjectivity. Emotions were considered as present if the average corresponding rating was over 15. Emotional dimensions were considered as positive if the average corresponding rating was over 1. 
+
+## Model Architectures
+1) Wav2Vec2: self-supervised model that operates on raw waveforms and captures localized acoustic patterns and contextualized high-level speech representations
+2) BERT Model: encoder-only transformer that is trained using unsupervised learning; picks up contextual representations based on surrounding content
+3) Video Vision Transformer (ViViT): utilizes spatial and temporal information to analyze video data
+4) Multimodal Fusion: combines information from all three modalities (audio, textual and visual) to produce a single set of predictions<br><br>
+Multimodal Fusion Pipeline: <br><br>
+![Pipeline](images/multimodal_model_architecture.png)
 
 ## Citation
 If using this repository, here is the citation:
