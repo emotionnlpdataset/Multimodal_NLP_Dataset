@@ -47,7 +47,6 @@ https://huggingface.co/datasets/multimodalemotionnlp/ResearchProjectHDF5Files
 ### 4) Multimodal Fusion (Multimodal.py)
 > If you plan to run Multimodal.py, make sure to run all three modalities (Audio, Text and Video) first. Then make sure to run the embeddings files (found in this GitHub repository at Embeddings/Embeddings Programs) to store the embeddings from each modality before finally running Multimodal.py. 
 <br>
-
 _________________________________________________________________________________________________________________________________________
 
 There are two ways of running a program:<br>
