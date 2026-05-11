@@ -25,6 +25,7 @@ The multilabel classification approach was utilized as it was better suited for 
 2) BERT Model: encoder-only transformer that is trained using unsupervised learning; picks up contextual representations based on surrounding content
 3) Video Vision Transformer (ViViT): utilizes spatial and temporal information to analyze video data
 4) Multimodal Fusion: combines information from all three modalities (audio, textual and visual) to produce a single set of predictions<br>
+Multimodal Fusion Pipeline: <br>
 ![Pipeline](images/multimodal_model_architecture.png)
 
 ## Installation
