@@ -74,7 +74,7 @@ Label Files can be found in this GitHub repository:
 
 ## Details Regarding the Dataset
 ### Data Collection
-Video clips were collected from publically-available sources such as YouTube and TikTok.
+Video clips were collected from publically-available sources such as YouTube and TikTok. Video clips consist of neurotypical and neurodivergent individuals exhibiting various emotions in naturalistic settings. 
 
 ### Data Annotation
 Video clips were annotated using crowd-sourced rating. Raters were assigned to rate clips using a web-interface application, where emotions (anger, disgust, fear, happiness, sadness, surprise and neutral) were rated using sliding scales from 0 to 100 while emotional dimensions (valence, arousal and dominance) were rated using sliding scales ranging from -3 to 3. 
