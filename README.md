@@ -22,12 +22,7 @@ https://huggingface.co/datasets/multimodalemotionnlp/ResearchProjectHDF5Files
 
 ## Multimodal Fusion
 Multimodal.py
-
-
-
-
-
-\
+<br><br><br>
 Note: Make sure all folders and files are saved to the save directory.
 
 There are two ways of running a program:
