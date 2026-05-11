@@ -97,7 +97,7 @@ NEURODIVERSE_MULTIMODAL_NLP_DATASET
 ```
 
 ## License
-This repository is released under the Apache License, Version 2.0<br>
+This repository is licensed under the Apache License, Version 2.0<br>
 http://www.apache.org/licenses/LICENSE-2.0 
 
 
