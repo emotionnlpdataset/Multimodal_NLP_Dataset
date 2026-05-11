@@ -64,7 +64,6 @@ python Multimodal.py --emotions_task False --path_to_folder path/to/folder/
 | `--emotions_task False` | Runs the emotional dimension classification task |
 | `--path_to_folder` | Path to the working directory containing the program files |
 <br>
-
 ## Details Regarding the Dataset
 ### Data Collection
 Video clips were collected from publically-available sources such as YouTube and TikTok. Video clips consist of neurotypical and neurodivergent individuals exhibiting various emotions in naturalistic settings. 
