@@ -61,7 +61,7 @@ ________________________________________________________________________________
 
 There are two ways of running a program:<br>
 1. Running through the command terminal<br>
-In the cmd terminal, navigate to the directory that the program exists in. Example (if running Multimodal.py and performing the emotional dimensions classification task and your path_to_folder is path/to/folder/):
+In the command terminal, navigate to the directory that the program exists in. Example (if running Multimodal.py and performing the emotional dimensions classification task and your path_to_folder is path/to/folder/):
 
 ```
 python Multimodal.py --emotions_task False --path_to_folder path/to/folder/
