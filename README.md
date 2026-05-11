@@ -62,8 +62,8 @@ python Multimodal.py --emotions_task False --path_to_folder path/to/folder/
 |---|---|
 | `--emotions_task True` | Runs the emotion classification task |
 | `--emotions_task False` | Runs the emotional dimension classification task |
-| `--path_to_folder` | Path to the working directory containing the program files |<br>
-
+| `--path_to_folder` | Path to the working directory containing the program files |
+<br>
 
 ## Details Regarding the Dataset
 ### Data Collection
