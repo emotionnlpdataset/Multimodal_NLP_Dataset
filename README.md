@@ -21,29 +21,25 @@ source venv/bin/activate  # On Windows: venv/Scripts/activate
 ```
 pip install -r requirements.txt
 ```
+Note: Make sure all folders and files are saved to the save directory.
+
 
 ## Usage
 There are four options to choose from for running a program. 
 
-### Audio Processing
-Audio_Processing.py
+### Audio Processing (Audio_Processing.py)
 > Filtered audio clips can be found at:
 https://huggingface.co/datasets/multimodalemotionnlp/cleanedAudioFiles
 
-## Textual Processing
-Text_Processing.py
-- Text Preprocessing file can be found in this GitHub repository (Miscellaneous/Text_Preprocessing.txt)
+### Textual Processing (Text_Processing.py)
+> Text Preprocessing file can be found in this GitHub repository (Miscellaneous/Text_Preprocessing.txt)
 
-## Visual Processing
-Video_Processing.py
-- HDF5 Files can be found at: 
+### Visual Processing (Video_Processing.py)
+> HDF5 Files can be found at: 
 https://huggingface.co/datasets/multimodalemotionnlp/ResearchProjectHDF5Files
 
-## Multimodal Fusion
-Multimodal.py
+### Multimodal Fusion (Multimodal.py)
 <br><br><br><br><br><br>
-Note: Make sure all folders and files are saved to the save directory.
-
 There are two ways of running a program:
 1) Running through the command terminal
 
