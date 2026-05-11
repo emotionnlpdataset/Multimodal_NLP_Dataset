@@ -4,6 +4,25 @@ Our goal is to make a novel neurodiverse dataset featuring neurodivergent and ne
 
 The publically available dataset featuring video clips can be found at: https://huggingface.co/datasets/multimodalemotionnlp/Neurodiverse_Multimodal_Dataset
 
+## Installation
+1) Clone the repository
+```
+git clone <repository-url>
+cd Multimodal_NLP
+```
+
+2) Create a virtual environment
+```
+python -m venv venv
+source venv/bin/activate  # On Windows: venv/Scripts/activate
+```
+
+3) Install necessary dependencies (as seen in the requirements.txt file)
+```
+pip install -r requirements.txt
+```
+
+## Usage
 There are four options to choose from for running a program. 
 
 ### Audio Processing
@@ -51,10 +70,6 @@ https://huggingface.co/multimodalemotionnlp/Neurodiverse_NLP_Models
 Label Files can be found in this GitHub repository: 
 - For the emotional classification task: Labels_File/New_Labels_By_Classification_Emotions_Threshold15.npy
 - For the emotional dimensions classification task: Labels_File/Revised_New_Labels_By_Classification_Attributes.npy
-
-Note: Please install all necessary Python packages (as seen in the requirements.txt file) before running any programs. 
-
-
 
 
 
