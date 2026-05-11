@@ -21,10 +21,10 @@ Video clips were annotated using crowd-sourced rating. Raters were assigned to r
 The multilabel classification approach was utilized as it was better suited for mitigating subjectivity. Emotions were considered as present if the average corresponding rating was over 15. Emotional dimensions were considered as positive if the average corresponding rating was over 1. 
 
 ## Model Architectures
-1) Wav2Vec2
-2) BERT Model
-3) Video Vision Transformer (ViViT)
-4) Multimodal Fusion <br>
+1) Wav2Vec2: self-supervised model that operates on raw waveforms and captures localized acoustic patterns and contextualized high-level speech representations
+2) BERT Model: encoder-only transformer that is trained using unsupervised learning; picks up contextual representations based on surrounding content
+3) Video Vision Transformer (ViViT): utilizes spatial and temporal information to analyze video data
+4) Multimodal Fusion: combines information from all three modalities (audio, textual and visual) to produce a single set of predictions<br>
 ![Pipeline](images/multimodal_model_architecture.png)
 
 ## Installation
