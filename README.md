@@ -40,7 +40,7 @@ source venv/bin/activate  # On Windows: venv/Scripts/activate
 ```
 
 3) Install necessary dependencies (as seen in the requirements.txt file)
-```
+```python
 pip install -r requirements.txt
 ```
 Note: Make sure all folders and files are saved to the save directory.
@@ -69,7 +69,7 @@ There are two ways of running a program:<br>
 1. Running through the command terminal<br>
 In the command terminal, navigate to the directory that the program exists in. Example (if running Multimodal.py and performing the emotional dimensions classification task and your path_to_folder is path/to/folder/):
 
-```
+```python
 python Multimodal.py --emotions_task False --path_to_folder path/to/folder/
 
 --emotions_task:  True  - Emotion Classification Task
