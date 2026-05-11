@@ -30,7 +30,7 @@ source venv/bin/activate  # On Windows: venv/Scripts/activate
 ```
 pip install -r requirements.txt
 ```
-Note: Make sure all folders and files are saved to the save directory.
+Note: Make sure all folders and files are saved to the same directory.
 
 
 ## Usage
