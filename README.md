@@ -6,7 +6,7 @@ The publically available dataset featuring video clips can be found at: https://
 
 There are four options to choose from for running a program: 
 1) Audio_Processing.py
-- Filtered audio clips can be found at:
+> Filtered audio clips can be found at:
 https://huggingface.co/datasets/multimodalemotionnlp/cleanedAudioFiles
 
 2) Text_Processing.py
