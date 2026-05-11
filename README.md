@@ -1,6 +1,12 @@
-# Neurodiverse Dataset
+# Multimodal Neurodiverse NLP Dataset for Emotion Recognition
 
 Our goal is to make a novel neurodiverse dataset featuring neurodivergent and neurotypical individuals, for the ultimate purpose of training and deploying AI models that can be used in mobile or web-based applications to assist neurodivergent individuals in daily tasks. Currently, our dataset consists of 1000 video clips. 
+
+This depository contains:
+- link to a multimodal neurodiverse dataset
+- preprocessing pipelines
+- pretrained and fine-tuned models and transformers
+- a multimodal fusion model designed for affective computing research
 
 The publically available dataset featuring video clips can be found at: https://huggingface.co/datasets/multimodalemotionnlp/Neurodiverse_Multimodal_Dataset
 
