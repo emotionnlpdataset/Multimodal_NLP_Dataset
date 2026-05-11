@@ -4,24 +4,30 @@ Our goal is to make a novel neurodiverse dataset featuring neurodivergent and ne
 
 The publically available dataset featuring video clips can be found at: https://huggingface.co/datasets/multimodalemotionnlp/Neurodiverse_Multimodal_Dataset
 
-There are four options to choose from for running a program: 
-1) Audio_Processing.py
+There are four options to choose from for running a program. 
+
+# Audio Processing
+Audio_Processing.py
 > Filtered audio clips can be found at:
 https://huggingface.co/datasets/multimodalemotionnlp/cleanedAudioFiles
 
-2) Text_Processing.py
+# Textual Processing
+Text_Processing.py
 - Text Preprocessing file can be found in this GitHub repository (Miscellaneous/Text_Preprocessing.txt)
 
-3) Video_Processing.py
+# Visual Processing
+Video_Processing.py
 - HDF5 Files can be found at: 
 https://huggingface.co/datasets/multimodalemotionnlp/ResearchProjectHDF5Files
 
-4) Multimodal.py
+# Multimodal Fusion
+Multimodal.py
 
 Note: Make sure all folders and files are saved to the save directory.
 
 There are two ways of running a program:
 1) Running through the command terminal
+
 In the cmd terminal, navigate to the directory that the program exists in.
 Example (if running Multimodal.py and performing the emotional dimensions classification task and your path_to_folder is path/to/folder/):
 
@@ -46,7 +52,7 @@ Label Files can be found in this GitHub repository:
 - For the emotional classification task: Labels_File/New_Labels_By_Classification_Emotions_Threshold15.npy
 - For the emotional dimensions classification task: Labels_File/Revised_New_Labels_By_Classification_Attributes.npy
 
-Note: Please install all necessary Python packages (as seen in the Requirements.txt file) before running any programs. 
+Note: Please install all necessary Python packages (as seen in the requirements.txt file) before running any programs. 
 
 
 
